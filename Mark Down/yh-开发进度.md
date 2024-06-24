@@ -126,3 +126,21 @@ git pull origin main --rebase
 # 推送到远程仓库
 git push -u origin main
 ```
+
+## 将 GitHub 仓库更新到本地
+
+**打开终端（命令行）**。
+
+**导航到你的本地仓库目录**。
+
+```
+cd D:\A_Project\互聯網應用綜合實踐\Machinery-Mall
+```
+
+**从远程仓库获取并合并更新**：
+
+使用`git pull`命令从远程仓库拉取更新并合并到本地分支：
+
+```
+git pull origin main
+```
