@@ -28,7 +28,7 @@
 
 将本地代码上传到 GitHub 仓库的指令流程如下：
 
-### 1. 初始化 Git 仓库（如果还没有初始化）
+#### 1. 初始化 Git 仓库（如果还没有初始化）
 
 如果你还没有在本地项目中初始化 Git 仓库，可以使用以下命令：
 
@@ -36,7 +36,7 @@
 git init
 ```
 
-### 2. 添加远程仓库
+#### 2. 添加远程仓库
 
 如果你还没有将远程仓库添加到本地仓库，可以使用以下命令：
 
@@ -44,7 +44,7 @@ git init
 git remote add origin https://github.com/MRYUHUI/Machinery-Mall.git
 ```
 
-### 3. 添加所有更改
+#### 3. 添加所有更改
 
 将所有更改添加到 Git 索引中：
 
@@ -52,7 +52,7 @@ git remote add origin https://github.com/MRYUHUI/Machinery-Mall.git
 git add .
 ```
 
-### 4. 提交更改
+#### 4. 提交更改
 
 提交更改并附带一条提交信息：
 
@@ -74,58 +74,25 @@ git push -u origin main
 git push
 ```
 
-### 常见问题和解决办法
+### 组员版
 
-1. **远程仓库已经存在**
+1. 将所有更改添加到 Git 索引中
 
-如果你尝试添加远程仓库时收到 `error: remote origin already exists.` 错误，说明已经配置了远程仓库。你可以使用以下命令查看远程仓库：
+   ```
+   git add .
+   ```
 
-```
-git remote -v
-```
+2. 提交更改并附带一条提交信息：
 
-1. **更改默认分支名称**
+   ```
+   git commit -m "Your commit message"
+   ```
 
-如果你的默认分支不是 `main` 而是 `master` 或其他名称，可以使用以下命令更改分支名称：
+3. 推送代码
 
-```
-git branch -M main
-```
-
-1. **合并远程更改**
-
-在推送代码之前，建议先拉取远程仓库中的更改，以避免冲突：
-
-```
-git pull origin main
-```
-
-### 完整流程示例
-
-假设你已经在本地项目中初始化了 Git 仓库，并且需要将更改推送到 GitHub 仓库，以下是完整的流程示例：
-
-```
-# 初始化 Git 仓库（如果还没有初始化）
-git init
-
-# 添加远程仓库（如果还没有添加）
-git remote add origin https://github.com/MRYUHUI/Machinery-Mall.git
-
-# 查看远程仓库
-git remote -v
-
-# 添加所有更改
-git add .
-
-# 提交更改
-git commit -m "Your commit message"
-
-# 合并远程更改（可选）
-git pull origin main --rebase
-
-# 推送到远程仓库
-git push -u origin main
-```
+   ```
+   git push
+   ```
 
 ## 将 GitHub 仓库更新到本地
 
