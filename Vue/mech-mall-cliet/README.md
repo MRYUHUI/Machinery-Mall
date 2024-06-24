@@ -1,4 +1,4 @@
-# mech-mall
+# mech-mall-cliet
 
 ## Project setup
 ```
