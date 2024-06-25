@@ -1,5 +1,8 @@
 server:
-  port: 8888
+#  设置基地址为 http://localhost:8080/actionmall
+  port: 8080
+  servlet:
+    context-path: /actionmall
 
 spring:
   datasource:
