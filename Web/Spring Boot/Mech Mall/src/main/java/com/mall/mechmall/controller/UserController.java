@@ -3,6 +3,8 @@ import com.alibaba.fastjson.JSONObject;
 import com.mall.mechmall.domain.User;
 import com.mall.mechmall.service.UserService;
 import static com.mall.mechmall.utils.Consts.*;
+
+import com.mall.mechmall.utils.MD5Utils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 /**
@@ -23,6 +25,7 @@ public class UserController {
         if (userService.checkUserByAccount(user.getAccount())) {
             return getJson("用户名已存在", false);
         }
+        user.setPassword(MD5Utils.MD5Encode(user.getPassword()));
         // 注册用户
         if (userService.insertUser(user)) {
             return getJson("注册成功", true);
