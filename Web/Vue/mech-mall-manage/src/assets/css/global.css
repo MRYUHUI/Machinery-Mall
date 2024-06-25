@@ -52,3 +52,7 @@ button:hover{
 button:active{
 	transform: scale(0.9);
 }
+
+.setPoint:hover{
+	cursor: pointer;
+}

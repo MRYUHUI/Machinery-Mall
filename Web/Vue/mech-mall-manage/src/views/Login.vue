@@ -50,12 +50,12 @@ const togglePasswordVisibility = () => {
 
 // 输入框获得焦点时
 const handleFocus = () => {
-  isFocused.value = true
+  isFocused.value = !isFocused.value
 }
 
 // 输入框失去焦点时
 const handleBlur = () => {
-  isFocused.value = false
+  isFocused.value = !isFocused.value
 }
 // 注册
 const signUp = () => {
