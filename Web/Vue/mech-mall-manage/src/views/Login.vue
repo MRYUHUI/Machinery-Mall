@@ -1,12 +1,14 @@
 <script setup>
+import apiRequests from '@/apis';
 import { reactive, ref, getCurrentInstance } from 'vue'
 import { useRouter } from 'vue-router';
+import { ElMessage } from 'element-plus';
 // data============================================
 const router = useRouter()
 const loginRef = ref(null)
 // rules
 const loginRule = {
-  username: [{ required: true, message: '用户名不能为空', trigger: 'blur' }],
+  account: [{ required: true, message: '用户名不能为空', trigger: 'blur' }],
   password: [
     { required: true, message: '密码不能为空', trigger: 'blur' },
     { min: 3, max: 20, message: '密码长度应为3到20个字符', trigger: 'blur' }
@@ -18,7 +20,7 @@ const isFocused = ref(false)
 
 // 创建表单数据
 const form = reactive({
-  username: '',
+  account: '',
   password: '',
 })
 
@@ -28,18 +30,10 @@ const showPassword = ref(false)
 
 // method=====================================
 
-// 提交表单
-const onSubmit = () => {
-  loginRef.value.validate((valid) => {
-    if (valid) {
-      console.log(form.username);
-    }
-  })
-}
 
 // 重置表单
 const onReset = () => {
-  form.username = ''
+  form.account = ''
   form.password = ''
 }
 
@@ -61,6 +55,25 @@ const handleBlur = () => {
 const signUp = () => {
   router.push({ name: 'register' })
 }
+// 登录
+const onSubmit = () => {
+  console.log(form);
+
+  loginRef.value.validate(async (valid) => {
+    if (valid) {
+      const res = await apiRequests.signIn(form)
+      console.log(res);
+      if (res.success) {
+        router.push({ name: 'home' })
+        ElMessage.success(res.message)
+      }
+      else {
+        ElMessage.error(res.message)
+      }
+    }
+  })
+}
+
 </script>
 
 <template>
@@ -80,9 +93,9 @@ const signUp = () => {
         ref="loginRef"
       >
         <!-- 用户名 -->
-        <el-form-item label="用户名" prop="username">
+        <el-form-item label="用户名" prop="account">
           <el-input
-            v-model="form.username"
+            v-model="form.account"
             :style="{ width: '350px' }"
             @focus="handleFocus"
             @blur="handleBlur"

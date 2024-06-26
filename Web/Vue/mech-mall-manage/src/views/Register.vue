@@ -1,9 +1,12 @@
 <script setup>
+import apiRequests from '@/apis';
 import { reactive, ref, getCurrentInstance } from 'vue'
 import { useRouter } from 'vue-router';
+import { ElMessage } from 'element-plus';
 // data============================================
 const router = useRouter()
 const registerRef = ref(null)
+const ageOptions = Array.from({ length: 121 }, (_, i) => i) // 生成0到120的数组
 // rules
 const registerRule = {
   account: [{ required: true, message: '用户名不能为空', trigger: 'blur' }],
@@ -27,7 +30,7 @@ const registerRule = {
   phone: [{ required: true, message: '电话不能为空', trigger: 'blur' }],
   question: [{ required: true, message: '密码问题不能为空', trigger: 'blur' }],
   asw: [{ required: true, message: '答案不能为空', trigger: 'blur' }],
-  age: [{ required: true, message: '年龄不能为空', trigger: 'blur' }],
+  age: [{ required: true, message: '请选择年龄', trigger: 'change' }],
   sex: [{ required: true, message: '性别不能为空', trigger: 'change' }],
   name: [{ required: true, message: '姓名不能为空', trigger: 'blur' }],
 }
@@ -58,13 +61,29 @@ const showPassword = ref(false)
 // method=====================================
 
 // 提交表单
-const onSubmit = () => {
-  registerRef.value.validate((valid) => {
+const onSubmit = async () => {
+  registerRef.value.validate(async (valid) => {
     if (valid) {
-      console.log(form);
+      try {
+        const response = await apiRequests.signUp(form);
+        console.log(response);
+
+        if (response.success) {
+          // 注册成功处理
+          ElMessage.success(response.message);
+          router.replace({ name: 'login' })
+        } else {
+          // 注册失败处理
+          ElMessage.error(response.message);
+        }
+      } catch (error) {
+        // 请求失败处理
+        ElMessage.error("注册失败，请稍后再试");
+        console.error(error);
+      }
     }
-  })
-}
+  });
+};
 
 // 重置表单
 const onReset = () => {
@@ -197,12 +216,20 @@ const handleBlur = () => {
           </el-form-item>
           <!-- 年龄 -->
           <el-form-item label="年龄" prop="age">
-            <el-input
+            <el-select
               v-model="form.age"
               :style="{ width: '350px' }"
+              placeholder="请选择年龄"
               @focus="handleFocus"
               @blur="handleBlur"
-            />
+            >
+              <el-option
+                v-for="age in ageOptions"
+                :key="age"
+                :label="age"
+                :value="age"
+              />
+            </el-select>
           </el-form-item>
           <!-- 性别 -->
           <el-form-item label="性别" prop="sex">

@@ -1,6 +1,9 @@
 import httpInstance from "@/utils/http";
 
 const userApi = {
-	signUp: (user) => httpInstance.post('/mgr/user/register.do', user),
+	signUp: (user) => httpInstance.post('/user/do_register.do', user),
+	findUserByAcc: (account) => httpInstance.get('/user/account', { params: { account } }),
+	signIn: (user) => httpInstance.post('/user/do_login.do', user),
+
 };
 export default userApi;

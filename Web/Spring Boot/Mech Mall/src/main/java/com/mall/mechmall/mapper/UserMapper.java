@@ -27,7 +27,7 @@ public interface UserMapper {
     public int checkUserByPhone(@Param("phone") String phone);
 
     @Insert("INSERT INTO users (account, password, email, phone, question, asw, role, age, sex, create_time, update_time, del, name) " +
-            "VALUES (#{account}, #{password}, #{email}, #{phone}, #{question}, #{asw}, #{role}, #{age}, #{sex}, NOW(), #{updateTime}, #{del}, #{name})")
+            "VALUES (#{account}, #{password}, #{email}, #{phone}, #{question}, #{asw}, #{role}, #{age}, #{sex}, NOW(), Now(), #{del}, #{name})")
     public int insertUser(User user);
 
     @Select("SELECT question FROM users WHERE account = #{account}")

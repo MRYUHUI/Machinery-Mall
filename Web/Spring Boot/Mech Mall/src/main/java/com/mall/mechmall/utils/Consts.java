@@ -41,12 +41,12 @@ public class Consts {
     public static JSONObject getJson(String msg, boolean tag) {
         JSONObject jsonObject = new JSONObject();
         if (tag) {
-            jsonObject.put(STATUS, 1);
+            jsonObject.put(STATUS, 0);
             jsonObject.put(Consts.MSG, msg);
             jsonObject.put(Consts.SUCCESS, true);
             jsonObject.put(TYPE, SUCCESS);
         } else {
-            jsonObject.put(STATUS, 0);
+            jsonObject.put(STATUS, 1);
             jsonObject.put(Consts.MSG, msg);
             jsonObject.put(TYPE, ERROR);
             jsonObject.put(Consts.SUCCESS, false);
