@@ -38,15 +38,16 @@ public class Consts {
         return FileSystemUtils.deleteRecursively(new File(filePath));
     }
 
-    public static JSONObject getJson(boolean tag, String msg) {
+    public static JSONObject getJson(String msg, boolean tag) {
         JSONObject jsonObject = new JSONObject();
         if (tag) {
-            jsonObject.put(Consts.CODE, CODE_200);
-            jsonObject.put(Consts.MSG, msg + "成功");
+            jsonObject.put(STATUS, 0);
+            jsonObject.put(Consts.MSG, msg);
             jsonObject.put(Consts.SUCCESS, true);
             jsonObject.put(TYPE, SUCCESS);
         } else {
-            jsonObject.put(Consts.MSG, msg + "失敗");
+            jsonObject.put(STATUS, 1);
+            jsonObject.put(Consts.MSG, msg);
             jsonObject.put(TYPE, ERROR);
             jsonObject.put(Consts.SUCCESS, false);
         }

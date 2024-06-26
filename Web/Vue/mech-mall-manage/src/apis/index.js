@@ -1,11 +1,9 @@
 import { SystemConsts } from '@/enums/SystemConsts'
-import homeApi from './home';
-
+import userApi from '@/apis/user'
 
 const apiRequests = {
 	// 获取图片url
 	attachImageUrl: (url) => url ? `${SystemConsts.BASE_URL}${url}` : "",
-	...homeApi,
-
+	...userApi,
 }
 export default apiRequests;

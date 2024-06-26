@@ -5,8 +5,11 @@ const httpInstance = axios.create({
 	baseURL: SystemConsts.BASE_URL,
 	timeout: 5000,
 	withCredentials: true,
+	// headers: {
+	// 	'Content-Type': 'application/x-www-form-urlencoded;charset=UTF-8'
+	// }
 	headers: {
-		'Content-Type': 'application/x-www-form-urlencoded;charset=UTF-8'
+		'Content-Type': 'application/json'  // 修改为JSON格式
 	}
 })
 // 拦截器
