@@ -1,81 +1,3 @@
-<script setup>
-import apiRequests from '@/apis';
-import { reactive, ref, getCurrentInstance } from 'vue'
-import { useRouter } from 'vue-router';
-import { ElMessage } from 'element-plus';
-// data============================================
-const router = useRouter()
-const loginRef = ref(null)
-// rules
-const loginRule = {
-  account: [{ required: true, message: '用户名不能为空', trigger: 'blur' }],
-  password: [
-    { required: true, message: '密码不能为空', trigger: 'blur' },
-    { min: 3, max: 20, message: '密码长度应为3到20个字符', trigger: 'blur' }
-  ]
-}
-
-// 输入框焦点状态
-const isFocused = ref(false)
-
-// 创建表单数据
-const form = reactive({
-  account: '',
-  password: '',
-})
-
-// 查看密码切换
-const showPassword = ref(false)
-
-
-// method=====================================
-
-
-// 重置表单
-const onReset = () => {
-  form.account = ''
-  form.password = ''
-}
-
-// 切换密码可见性
-const togglePasswordVisibility = () => {
-  showPassword.value = !showPassword.value
-}
-
-// 输入框获得焦点时
-const handleFocus = () => {
-  isFocused.value = !isFocused.value
-}
-
-// 输入框失去焦点时
-const handleBlur = () => {
-  isFocused.value = !isFocused.value
-}
-// 注册
-const signUp = () => {
-  router.push({ name: 'register' })
-}
-// 登录
-const onSubmit = () => {
-  console.log(form);
-
-  loginRef.value.validate(async (valid) => {
-    if (valid) {
-      const res = await apiRequests.signIn(form)
-      console.log(res);
-      if (res.success) {
-        router.push({ name: 'home' })
-        ElMessage.success(res.message)
-      }
-      else {
-        ElMessage.error(res.message)
-      }
-    }
-  })
-}
-
-</script>
-
 <template>
   <div class="container">
     <div
@@ -134,6 +56,89 @@ const onSubmit = () => {
   </div>
 </template>
 
+<script setup>
+import apiRequests from '@/apis';
+import { reactive, ref } from 'vue';
+import { useRouter } from 'vue-router';
+import { ElMessage } from 'element-plus';
+import { useStore } from 'vuex';
+
+const router = useRouter();
+const loginRef = ref(null);
+const store = useStore();
+
+const form = reactive({
+  account: '',
+  password: '',
+});
+
+const loginRule = {
+  account: [{ required: true, message: '用户名不能为空', trigger: 'blur' }],
+  password: [
+    { required: true, message: '密码不能为空', trigger: 'blur' },
+    { min: 3, max: 20, message: '密码长度应为3到20个字符', trigger: 'blur' },
+  ],
+};
+
+const isFocused = ref(false);
+
+const togglePasswordVisibility = () => {
+  showPassword.value = !showPassword.value;
+};
+
+const showPassword = ref(false);
+
+const handleFocus = () => {
+  isFocused.value = true;
+};
+
+const handleBlur = () => {
+  isFocused.value = false;
+};
+
+const signUp = () => {
+  router.push({ name: 'register' });
+};
+
+const onSubmit = async () => {
+  loginRef.value.validate(async (valid) => {
+    if (valid) {
+      try {
+        const res = await apiRequests.signIn(form);
+        console.log(res);
+
+        if (res.success) {
+          const user = res.data;
+
+          // 调用 Vuex 的 action 存储用户信息
+          store.dispatch('saveUserInfo', {
+            userId: user.id,
+            account: user.account,
+            email: user.email,
+            role: user.role,
+            sex: user.sex,
+          });
+          console.log(store.getters.userId + ' ' + store.getters.account);
+
+          if (user.role === 1) {
+            router.push({ name: 'user-home' });
+          } else {
+            router.push({ name: 'admin-home' });
+          }
+          ElMessage.success(res.message);
+        } else {
+          ElMessage.error(res.message);
+        }
+      } catch (error) {
+        console.error('登录失败:', error);
+        ElMessage.error('登录失败，请稍后重试');
+      }
+    }
+  });
+};
+
+</script>
+
 <style>
 .login {
   padding: 30px;
@@ -145,16 +150,19 @@ const onSubmit = () => {
   border-radius: 10px;
   font-weight: bold;
 }
+
 .unactive-shadow {
   border: 5px solid #0055ff6c;
   box-shadow: 0 0 50px #0044ffec;
   transition: all 0.5s;
 }
+
 .active-shadow {
   border: 5px solid #dd00ff6c;
   box-shadow: 0 0 50px #ff00e696;
   transition: all 0.5s;
 }
+
 .forgot-password {
   margin-top: -15px;
   margin-left: 50px;

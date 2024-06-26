@@ -3,7 +3,7 @@ import App from './App.vue'
 import router from './router'
 import installElementPlus from './plugins/element'
 import '@/assets/css/global.css'
-
+import store from './store';
 
 
 
@@ -13,4 +13,4 @@ import '@/assets/css/global.css'
 
 const app = createApp(App)
 installElementPlus(app)
-app.use(router).mount('#app')
+app.use(router).use(store).mount('#app')

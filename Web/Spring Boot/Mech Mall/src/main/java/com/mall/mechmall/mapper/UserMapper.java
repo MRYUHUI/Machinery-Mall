@@ -73,4 +73,5 @@ public interface UserMapper {
 
     @Select("SELECT * FROM users WHERE account = #{account}")
     public User fndUserByAccount(@Param("account") String account);
+
 }
