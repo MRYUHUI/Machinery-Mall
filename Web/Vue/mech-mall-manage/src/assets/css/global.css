@@ -56,3 +56,12 @@ button:active{
 .setPoint:hover{
 	cursor: pointer;
 }
+
+/* 后台管理主题内容 */
+.admin-contianer {
+  padding: 50px 80px;
+  width: 1100px;
+  height: 700px;
+  border-radius: 10px;
+  box-shadow: 0 0 10px #000000a7;
+}

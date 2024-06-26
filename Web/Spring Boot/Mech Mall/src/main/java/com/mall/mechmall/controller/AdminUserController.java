@@ -1,12 +1,13 @@
 package com.mall.mechmall.controller;
 
+import com.alibaba.fastjson.JSONObject;
 import com.mall.mechmall.domain.User;
 import com.mall.mechmall.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
+import static com.mall.mechmall.utils.Consts.*;
+import java.util.List;
+import java.util.Map;
 
 /**
  * @Author: yuhui
@@ -15,13 +16,13 @@ import org.springframework.web.bind.annotation.RestController;
  */
 
 @RestController
-@RequestMapping("/mgr/user")
+@RequestMapping("/admin")
 public class AdminUserController {
 
     @Autowired
     private UserService userService;
 
-    @PostMapping("/update.do")
+    @PostMapping("/update")
     public String updateUser(@RequestBody User user) {
         boolean updated = userService.updateUserInfo(user);
         if (updated) {
@@ -31,5 +32,15 @@ public class AdminUserController {
         }
     }
 
-    // 其他用户管理功能方法
+    /**
+     * 获取所有用户信息
+     * @return Object
+     */
+    @GetMapping("/allUsers")
+    public Object findAllUsers() {
+        List<Map<String, Object>> allUsers = userService.findAllUsers();
+        JSONObject json = getJson("获取成功", true);
+        json.put(DATA, allUsers);
+        return userService.findAllUsers();
+    }
 }

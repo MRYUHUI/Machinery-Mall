@@ -6,6 +6,7 @@ import com.mall.mechmall.domain.User;
 import org.apache.ibatis.annotations.*;
 
 import java.util.List;
+import java.util.Map;
 
 /**
  * @Author: yuhui
@@ -62,8 +63,8 @@ public interface UserMapper {
     })
     public int updateUserInfo(User user);
 
-    @Select("SELECT * FROM users")
-    public List<User> fndAllUsers();
+    @Select("SELECT id, account, name, sex, age, phone, email FROM users WHERE role = 1")
+    public List<Map<String, Object>> findAllUsers();
 
     @Delete("DELETE FROM users WHERE id = #{id}")
     public int deleteUser(@Param("id") Integer id);

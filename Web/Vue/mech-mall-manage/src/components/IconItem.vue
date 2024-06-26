@@ -4,12 +4,11 @@
   </svg>
 </template>
 
-<script setup lang="ts">
-import { PropType } from 'vue'
+<script setup>
 
 const props = defineProps({
   icon: {
-    type: String as PropType<string>,
+    type: String,
     required: true,
   },
 })
@@ -20,7 +19,7 @@ const props = defineProps({
   transform: scale(1.4);
   width: 15px;
   height: 15px;
-  vertical-align: -0.15em;
+  /* vertical-align: -0.15em; */
   fill: currentColor;
   overflow: hidden;
 }

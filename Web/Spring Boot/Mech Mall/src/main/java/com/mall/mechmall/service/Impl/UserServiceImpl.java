@@ -9,6 +9,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.Map;
+
 /**
  * @Author:
  * @Date: 2024-06-25-21:59
@@ -70,8 +72,8 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public List<User> findAllUsers() {
-        return userMapper.fndAllUsers();
+    public List<Map<String, Object>> findAllUsers() {
+        return userMapper.findAllUsers();
     }
 
     @Override

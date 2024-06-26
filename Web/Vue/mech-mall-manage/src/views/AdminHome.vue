@@ -1,56 +1,82 @@
 <script setup>
 import AdminHeaderVue from '@/components/admin/AdminHeader.vue';
-import { ref, computed } from 'vue';
+import { ref, computed, onMounted } from 'vue';
 import { useRouter } from 'vue-router';
 import { useStore } from 'vuex';
+import { Icons } from '@/enums/Icons'
+import IconItem from '@/components/IconItem.vue'
+// data ==================
 const store = useStore();
 const router = useRouter();
 const isCollapse = ref(false)
-
-
+const icons = {
+  userIcon: Icons.USER,
+  goodIcon: Icons.GOODS,
+  goodTypeIcon: Icons.GOOD_TYPE,
+  orderIcon: Icons.ORDER
+}
+// method ===================
 const toggleCollapse = () => isCollapse.value = !isCollapse.value
+// 跳转用户管理界面
+const goToUserManagePage = () => {
+  // 设置被激活的页面index = 1
+  store.commit('setActivePageIndex', 1)
+  router.replace({ name: 'admin-user' })
+}
+// computed =========================
+const curActivePageIndex = computed(() => store.getters.activePageIndex)
+onMounted(() => {
+  router.push({ name: 'admin-user' })
+})
 </script>
 
 <template>
-  <el-aside
-    class="el-aside"
-    :width="isCollapse ? '75px' : '240px'"
-    style="background-color: #fff"
-  >
-    <el-menu
-      class="menu-list"
-      :default-active="defaultActiveItemInAside"
-      :collapse="isCollapse"
-      style="height: 100%"
-      :defaultOpeneds="['1']"
+  <!-- 导航栏部分 -->
+  <AdminHeaderVue></AdminHeaderVue>
+  <div class="admin-container">
+    <!-- 侧边栏部分 -->
+    <el-aside
+      class="el-aside"
+      :width="isCollapse ? '75px' : '240px'"
+      style="background-color: #fff"
     >
-      <div class="toggle-button button-attr" @click="toggleCollapse">|||</div>
-      <el-menu-item index="1">
-        <div class="menu-item">
-          <!-- <icon-item :icon="iconList.UserManagement"></icon-item> -->
-          <span class="menu-item-title" v-show="!isCollapse">用户管理</span>
-        </div>
-      </el-menu-item>
-      <el-menu-item index="2">
-        <div class="menu-item">
-          <!-- <icon-item :icon="iconList.TypeManagement"></icon-item> -->
-          <span class="menu-item-title" v-show="!isCollapse">类型管理</span>
-        </div>
-      </el-menu-item>
-      <el-menu-item index="3">
-        <div class="menu-item">
-          <!-- <icon-item :icon="iconList.ProductManagement"></icon-item> -->
-          <span class="menu-item-title" v-show="!isCollapse">商品管理</span>
-        </div>
-      </el-menu-item>
-      <el-menu-item index="4">
-        <div class="menu-item">
-          <!-- <icon-item :icon="iconList.OrderManagement"></icon-item> -->
-          <span class="menu-item-title" v-show="!isCollapse">订单管理</span>
-        </div>
-      </el-menu-item>
-    </el-menu>
-  </el-aside>
+      <el-menu
+        class="menu-list"
+        :default-active="curActivePageIndex"
+        :collapse="isCollapse"
+        style="height: 100%"
+        :defaultOpeneds="['1']"
+      >
+        <div class="toggle-button button-attr" @click="toggleCollapse">|||</div>
+        <el-menu-item index="1" @click="goToUserManagePage">
+          <div class="menu-item">
+            <icon-item :icon="icons.userIcon"></icon-item>
+            <span class="menu-item-title" v-show="!isCollapse">用户管理</span>
+          </div>
+        </el-menu-item>
+        <el-menu-item index="2">
+          <div class="menu-item">
+            <icon-item :icon="icons.goodTypeIcon"></icon-item>
+            <span class="menu-item-title" v-show="!isCollapse">类型管理</span>
+          </div>
+        </el-menu-item>
+        <el-menu-item index="3">
+          <div class="menu-item">
+            <icon-item :icon="icons.goodIcon"></icon-item>
+            <span class="menu-item-title" v-show="!isCollapse">商品管理</span>
+          </div>
+        </el-menu-item>
+        <el-menu-item index="4">
+          <div class="menu-item">
+            <icon-item :icon="icons.orderIcon"></icon-item>
+            <span class="menu-item-title" v-show="!isCollapse">订单管理</span>
+          </div>
+        </el-menu-item>
+      </el-menu>
+    </el-aside>
+    <!-- 展示主体内容 -->
+    <router-view></router-view>
+  </div>
 </template>
 
 <style scoped>
@@ -74,6 +100,10 @@ const toggleCollapse = () => isCollapse.value = !isCollapse.value
   display: flex;
   align-items: center;
   gap: 10px;
+  position: absolute;
+  top: 50%;
+  left: 30%;
+  transform: translate(-50%, -50%);
 }
 
 .menu-item-title {
@@ -102,5 +132,14 @@ const toggleCollapse = () => isCollapse.value = !isCollapse.value
   background: linear-gradient(to right, #3498db, #2ecc71);
   cursor: pointer;
   box-shadow: 0 0 20px rgb(5, 215, 215);
+}
+
+.el-aside {
+  height: 800px;
+}
+
+.admin-container {
+  display: flex;
+  gap: 30px;
 }
 </style>
