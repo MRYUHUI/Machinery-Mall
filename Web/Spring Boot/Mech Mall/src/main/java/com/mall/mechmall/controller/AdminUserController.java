@@ -41,6 +41,6 @@ public class AdminUserController {
         List<Map<String, Object>> allUsers = userService.findAllUsers();
         JSONObject json = getJson("获取成功", true);
         json.put(DATA, allUsers);
-        return userService.findAllUsers();
+        return json;
     }
 }
