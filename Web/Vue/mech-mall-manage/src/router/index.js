@@ -31,7 +31,22 @@ const routes = [
 				path: '/admin-home',
 				name: 'admin-user',
 				component: () => import('@/components/admin/AdminManageUser.vue'),
-			}
+			},
+			{
+				path: '/admin-good-type',
+				name: 'admin-good-type',
+				component: () => import('@/components/admin/AdminManageGoodType.vue'),
+			},
+			{
+				path: '/admin-goods',
+				name: 'admin-goods',
+				component: () => import('@/components/admin/AdminManageGoods.vue'),
+			},
+			{
+				path: '/admin-order',
+				name: 'admin-order',
+				component: () => import('@/components/admin/AdminMangeOrder.vue'),
+			},
 		]
 	}
 ]

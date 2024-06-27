@@ -24,6 +24,24 @@ const goToUserManagePage = () => {
   store.commit('setActivePageIndex', 1)
   router.replace({ name: 'admin-user' })
 }
+// 跳转商品类型管理界面
+const goToGoodTypeManagePage = () => {
+  // 设置被激活的页面index = 2
+  store.commit('setActivePageIndex', 2)
+  router.replace({ name: 'admin-good-type' })
+}
+// 跳转商品类型管理界面
+const goToGoodsManagePage = () => {
+  // 设置被激活的页面index = 3
+  store.commit('setActivePageIndex', 3)
+  router.replace({ name: 'admin-goods' })
+}
+// 跳转订单管理界面
+const goToOrderManagePage = () => {
+  // 设置被激活的页面index = 4
+  store.commit('setActivePageIndex', 4)
+  router.replace({ name: 'admin-order' })
+}
 // computed =========================
 const curActivePageIndex = computed(() => store.getters.activePageIndex)
 onMounted(() => {
@@ -55,19 +73,19 @@ onMounted(() => {
             <span class="menu-item-title" v-show="!isCollapse">用户管理</span>
           </div>
         </el-menu-item>
-        <el-menu-item index="2">
+        <el-menu-item index="2" @click="goToGoodTypeManagePage">
           <div class="menu-item">
             <icon-item :icon="icons.goodTypeIcon"></icon-item>
             <span class="menu-item-title" v-show="!isCollapse">类型管理</span>
           </div>
         </el-menu-item>
-        <el-menu-item index="3">
+        <el-menu-item index="3" @click="goToGoodsManagePage">
           <div class="menu-item">
             <icon-item :icon="icons.goodIcon"></icon-item>
             <span class="menu-item-title" v-show="!isCollapse">商品管理</span>
           </div>
         </el-menu-item>
-        <el-menu-item index="4">
+        <el-menu-item index="4" @click="goToOrderManagePage">
           <div class="menu-item">
             <icon-item :icon="icons.orderIcon"></icon-item>
             <span class="menu-item-title" v-show="!isCollapse">订单管理</span>
