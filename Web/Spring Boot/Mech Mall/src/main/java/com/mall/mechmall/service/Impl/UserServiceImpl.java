@@ -71,9 +71,25 @@ public class UserServiceImpl implements UserService {
         return userMapper.updateUserInfo(user) > 0;
     }
 
+    /**
+     * 获取所有普通用户
+     * @param page
+     * @param size
+     * @return List<Map<String, Object>>
+     */
     @Override
-    public List<Map<String, Object>> findAllUsers() {
-        return userMapper.findAllUsers();
+    public List<User> findAllUsers(int page, int size) {
+        int offset = (page - 1) * size;
+        return userMapper.findAllUsers(offset, size);
+    }
+
+    /**
+     * 获取普通用户的数量
+     * @return int
+     */
+    @Override
+    public int countUsers() {
+        return userMapper.countUsers();
     }
 
     @Override

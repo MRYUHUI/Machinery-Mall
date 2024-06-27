@@ -2,16 +2,27 @@ export default {
 	state: {
 		userId: "", // 用户ID
 		account: "", // 用户名
-		email: "", // 邮箱
-		role: "", // 角色
-		sex: "", // 性别
+		selectedUserInfo: { // 被选中的用户的信息，如：管理员编辑用户
+			id: '',
+			account: '',
+			password: '',
+			email: '',
+			phone: '',
+			question: '',
+			asw: '',
+			role: '',
+			age: '',
+			sex: '',
+			create_time: '',
+			update_time: '',
+			del: '',
+			name: ''
+		}
 	},
 	getters: {
 		userId: (state) => state.userId,
 		account: (state) => state.account,
-		email: (state) => state.email,
-		role: (state) => state.role,
-		sex: (state) => state.sex,
+		selectedUserInfo: (state) => state.selectedUserInfo,
 	},
 	mutations: {
 		setUserId: (state, userId) => {
@@ -20,23 +31,29 @@ export default {
 		setAccount: (state, account) => {
 			state.account = account;
 		},
-		setEmail: (state, email) => {
-			state.email = email;
+		// 更新整个 selectedUserInfo 
+		updateSelectedUserInfo: (state, selectedUserInfo) => {
+			state.selectedUserInfo = selectedUserInfo;
 		},
-		setRole: (state, role) => {
-			state.role = role;
-		},
-		setSex: (state, sex) => {
-			state.sex = sex;
-		},
+		// 更新 selectedUserInfo 单个字段
+		updateSelectedUserInfoField: (state, { field, value }) => {
+			if (state.selectedUserInfo.hasOwnProperty(field)) {
+				state.selectedUserInfo[field] = value;
+			}
+		}
 	},
 	actions: {
-		saveUserInfo ({ commit }, userInfo) {
+		saveIdAndAccount ({ commit }, userInfo) {
 			commit('setUserId', userInfo.userId);
 			commit('setAccount', userInfo.account);
-			commit('setEmail', userInfo.email);
-			commit('setRole', userInfo.role);
-			commit('setSex', userInfo.sex);
 		},
+		// 更新整个 selectedUserInfo 
+		updateSelectedUserInfo ({ commit }, selectedUserInfo) {
+			commit('updateSelectedUserInfo', selectedUserInfo);
+		},
+		// 更新 selectedUserInfo 单个字段
+		updateSelectedUserInfoField ({ commit }, { field, value }) {
+			commit('updateSelectedUserInfoField', { field, value });
+		}
 	}
 };

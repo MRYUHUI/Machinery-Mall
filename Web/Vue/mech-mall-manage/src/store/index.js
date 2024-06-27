@@ -1,4 +1,5 @@
 import { createStore } from "vuex";
+import createPersistedState from 'vuex-persistedstate';
 import user from "./user";
 import admin from "./admin";
 export default createStore({
@@ -6,4 +7,5 @@ export default createStore({
 		user,
 		admin,
 	},
+	plugins: [createPersistedState()],
 });

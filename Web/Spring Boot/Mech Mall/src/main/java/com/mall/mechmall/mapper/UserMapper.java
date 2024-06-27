@@ -47,29 +47,34 @@ public interface UserMapper {
             "<script>",
             "UPDATE users",
             "<set>",
-            "<if test='password != null and password.trim().length() > 0'>password = #{password},</if>",
-            "<if test='email != null and email.trim().length() > 0'>email = #{email},</if>",
-            "<if test='phone != null and phone.trim().length() > 0'>phone = #{phone},</if>",
-            "<if test='question != null and question.trim().length() > 0'>question = #{question},</if>",
-            "<if test='asw != null and asw.trim().length() > 0'>asw = #{asw},</if>",
+            "<if test='account != null'>account = #{account},</if>",
+            "<if test='password != null'>password = #{password},</if>",
+            "<if test='email != null'>email = #{email},</if>",
+            "<if test='phone != null'>phone = #{phone},</if>",
+            "<if test='question != null'>question = #{question},</if>",
+            "<if test='asw != null'>asw = #{asw},</if>",
             "<if test='role != null'>role = #{role},</if>",
             "<if test='age != null'>age = #{age},</if>",
             "<if test='sex != null'>sex = #{sex},</if>",
-            "<if test='name != null and name.trim().length() > 0'>name = #{name},</if>",
+            "<if test='name != null'>name = #{name},</if>",
             "update_time = NOW(),",
             "</set>",
-            "WHERE account = #{account}",
+            "WHERE id = #{id}",
             "</script>"
     })
     public int updateUserInfo(User user);
 
-    @Select("SELECT id, account, name, sex, age, phone, email FROM users WHERE role = 1")
-    public List<Map<String, Object>> findAllUsers();
+    @Select("SELECT id, account, email, phone, age, sex, name FROM users WHERE role = 1 LIMIT #{offset}, #{size}")
+    public List<User> findAllUsers(@Param("offset") int offset, @Param("size") int size);
+
+
+    @Select("SELECT COUNT(*) FROM users WHERE role = 1")
+    public int countUsers();
 
     @Delete("DELETE FROM users WHERE id = #{id}")
     public int deleteUser(@Param("id") Integer id);
 
-    @Select("SELECT * FROM users WHERE id = #{id}")
+    @Select("SELECT id, account, email, phone, age, sex, name FROM users WHERE id = #{id}")
     public User fndUserById(@Param("id") Integer id);
 
     @Select("SELECT * FROM users WHERE account = #{account}")

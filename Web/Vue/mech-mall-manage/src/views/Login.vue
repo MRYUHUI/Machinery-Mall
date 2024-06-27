@@ -111,12 +111,9 @@ const onSubmit = async () => {
           const user = res.data;
 
           // 调用 Vuex 的 action 存储用户信息
-          store.dispatch('saveUserInfo', {
+          store.dispatch('saveIdAndAccount', {
             userId: user.id,
             account: user.account,
-            email: user.email,
-            role: user.role,
-            sex: user.sex,
           });
           console.log(store.getters.userId + ' ' + store.getters.account);
 

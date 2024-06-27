@@ -22,25 +22,44 @@ public class AdminUserController {
     @Autowired
     private UserService userService;
 
-    @PostMapping("/update")
-    public String updateUser(@RequestBody User user) {
+    /**
+     * 管理员跟新用户信息
+     * @param user
+     * @return Object
+     */
+    @PostMapping("/updateUserInfo")
+    public Object updateUser(@RequestBody User user) {
         boolean updated = userService.updateUserInfo(user);
         if (updated) {
-            return "用户信息更新成功";
+            // 获取更新后的用户信息
+            User newUser = userService.findUserById(user.getId());
+            JSONObject json = getJson("信息修改成功", true);
+            json.put(DATA, newUser);
+            return json;
         } else {
-            return "用户信息更新失败";
+            return getJson("信息修改失败", false);
         }
     }
-
+    @GetMapping("/deleteUser")
+    public Object deleteUser(@RequestParam int id) {
+        boolean deleted = userService.deleteUser(id);
+        if (deleted) {
+            return getJson("用户删除成功", true);
+        } else {
+            return getJson("用户删除失败", false);
+        }
+    }
     /**
      * 获取所有用户信息
      * @return Object
      */
     @GetMapping("/allUsers")
-    public Object findAllUsers() {
-        List<Map<String, Object>> allUsers = userService.findAllUsers();
+    public Object findAllUsers(@RequestParam int page, @RequestParam int size) {
+        List<User> allUsers = userService.findAllUsers(page, size);
+        int total = userService.countUsers();
         JSONObject json = getJson("获取成功", true);
         json.put(DATA, allUsers);
+        json.put("total", total);
         return json;
     }
 }

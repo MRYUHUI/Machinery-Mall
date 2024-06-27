@@ -21,7 +21,8 @@ public interface UserService {
     Boolean updatePasswordByAccount(String account, String password);
     String checkPassword(String account);
     Boolean updateUserInfo(User user);
-    List<Map<String, Object>> findAllUsers();
+    List<User> findAllUsers(int page, int size);
+    int countUsers();
     Boolean deleteUser(Integer id);
     User findUserById(Integer id);
     User findUserByAccount(String account);

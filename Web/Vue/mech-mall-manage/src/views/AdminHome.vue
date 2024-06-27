@@ -5,6 +5,7 @@ import { useRouter } from 'vue-router';
 import { useStore } from 'vuex';
 import { Icons } from '@/enums/Icons'
 import IconItem from '@/components/IconItem.vue'
+import EditUserInfo from '@/components/EditUserInfo.vue'
 // data ==================
 const store = useStore();
 const router = useRouter();
@@ -26,7 +27,7 @@ const goToUserManagePage = () => {
 // computed =========================
 const curActivePageIndex = computed(() => store.getters.activePageIndex)
 onMounted(() => {
-  router.push({ name: 'admin-user' })
+
 })
 </script>
 
@@ -76,15 +77,17 @@ onMounted(() => {
     </el-aside>
     <!-- 展示主体内容 -->
     <router-view></router-view>
+
+    <!-- 编辑用户信息对话框 -->
+    <EditUserInfo></EditUserInfo>
   </div>
 </template>
 
 <style scoped>
-/* 样式可以根据需求自行调整 */
 .el-aside {
   box-shadow: 0 0 5px #0000003a;
   border-radius: 5px;
-  height: 850px;
+  height: 700px;
   transition: 1s;
   background-color: #333744;
   padding-left: 10px;
@@ -132,10 +135,6 @@ onMounted(() => {
   background: linear-gradient(to right, #3498db, #2ecc71);
   cursor: pointer;
   box-shadow: 0 0 20px rgb(5, 215, 215);
-}
-
-.el-aside {
-  height: 800px;
 }
 
 .admin-container {
