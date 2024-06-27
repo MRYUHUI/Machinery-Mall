@@ -80,4 +80,10 @@ public interface UserMapper {
     @Select("SELECT * FROM users WHERE account = #{account}")
     public User fndUserByAccount(@Param("account") String account);
 
+    @Select("SELECT * FROM users WHERE account LIKE CONCAT('%', #{keyword}, '%') OR name LIKE CONCAT('%', #{keyword}, '%') LIMIT #{offset}, #{size}")
+    List<User> searchUsers(@Param("keyword") String keyword, @Param("offset") int offset, @Param("size") int size);
+
+    @Select("SELECT COUNT(*) FROM users WHERE account LIKE CONCAT('%', #{keyword}, '%') OR name LIKE CONCAT('%', #{keyword}, '%')")
+    int countUsersByKeyword(String keyword);
+
 }

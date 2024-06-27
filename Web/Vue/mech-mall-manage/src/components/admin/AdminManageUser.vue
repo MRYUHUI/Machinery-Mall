@@ -4,10 +4,11 @@ import { computed, onMounted, ref, watch } from 'vue'
 import { SystemConsts } from "@/enums/SystemConsts";
 import { useStore } from "vuex";
 import { ElMessage } from "element-plus";
+
 // data
 const store = useStore()
 const userList = ref([])
-const totalUsers = ref(0) // Total number of users for pagination
+const totalUsers = ref(0)
 const columnWidth = '100px'
 const currentPage = ref(1)
 const pageSize = ref(10)
@@ -15,14 +16,27 @@ const pageSize = ref(10)
 let curDelUserId = -1
 // 警告提示
 const deleteUserDialogVisible = ref(false)
+const searchQuery = ref('')
+
 // method ===============
 // 获取所有用户
 const getAllUsers = async (page = 1, size = 10) => {
   const res = await apiRequests.getAllUsers(page, size)
-  // console.log(res);
-
   userList.value = res.data
   totalUsers.value = res.total
+}
+
+// 搜索用户
+const searchUsers = async (query, page = 1, size = 10) => {
+  if (!query) {
+    getAllUsers(page, size) // 如果查询为空，调用获取所有用户的函数
+    return;
+  }
+  const res = await apiRequests.searchUsers(query, page, size);
+  console.log(res);
+
+  userList.value = res.data;
+  totalUsers.value = res.total;
 }
 
 // 根据布尔值来显示男女
@@ -30,18 +44,16 @@ const formatGender = (row, column, cellValue) => {
   return cellValue ? '女' : '男';
 }
 
-
-
 // 页码改变时的处理函数
 const handlePageChange = (page) => {
   currentPage.value = page
-  getAllUsers(page, pageSize.value)
+  searchUsers(searchQuery.value, page, pageSize.value)
 }
 
 // 每页条数改变时的处理函数
 const handleSizeChange = (size) => {
   pageSize.value = size
-  getAllUsers(currentPage.value, size)
+  searchUsers(searchQuery.value, currentPage.value, size)
 }
 
 // 编辑用户信息
@@ -57,6 +69,7 @@ const handleDelete = (user) => {
   deleteUserDialogVisible.value = true
   curDelUserId = user.id
 }
+
 // 删除用户动作
 const deleteUserAction = async () => {
   const res = await apiRequests.deleteUser(curDelUserId)
@@ -64,11 +77,19 @@ const deleteUserAction = async () => {
     deleteUserDialogVisible.value = false
     ElMessage.success(res.message)
     // 刷新
-    getAllUsers(currentPage.value, pageSize.value)
+    searchUsers(searchQuery.value, currentPage.value, pageSize.value)
   } else {
     ElMessage.error(res.message)
   }
 }
+
+const handleSearch = async () => {
+  searchUsers(searchQuery.value, currentPage.value, pageSize.value)
+}
+// 复选框操作，可以大量删除用户
+const handleSelectionChange = () => [
+
+]
 // computed
 const isAdminUserFresh = computed(() => store.getters.isAdminUserFresh)
 watch(isAdminUserFresh, () => {
@@ -82,15 +103,26 @@ onMounted(() => {
 
 <template>
   <div class="admin-contianer">
-    <!-- 用户创建歌单 -->
+    <!-- 搜索栏 -->
+    <div class="search-bar">
+      <el-input
+        v-model="searchQuery"
+        placeholder="请输入用户名或姓名"
+        class="search-input"
+        clearable
+      />
+      <el-button type="primary" @click="handleSearch">搜索</el-button>
+    </div>
+    <!-- 用户信息 -->
     <el-table
       :data="userList"
-      style="width: 100%; height: 90%"
+      style="width: 100%; height: 80%"
       class=""
       highlight-current-row
       @selection-change="handleSelectionChange"
       :header-cell-style="SystemConsts.headerCellStyle"
       :cell-style="SystemConsts.cellStyle"
+      :header-cell-class-name="'fixed-header'"
     >
       <el-table-column
         type="selection"
@@ -160,30 +192,30 @@ onMounted(() => {
       layout="total, sizes, prev, pager, next, jumper"
       :total="totalUsers"
     />
-  </div>
-  <!-- 删除用户警告 -->
-  <el-dialog
-    v-model="deleteUserDialogVisible"
-    width="450px"
-    destroy-on-close
-    center
-    class="delete-user-dia"
-  >
-    <!-- 使用 title 插槽自定义标题样式 -->
-    <template #title>
-      <div class="custom-dialog-title">警 告</div>
-    </template>
+    <!-- 删除用户警告 -->
+    <el-dialog
+      v-model="deleteUserDialogVisible"
+      width="450px"
+      destroy-on-close
+      center
+      class="delete-user-dia"
+    >
+      <!-- 使用 title 插槽自定义标题样式 -->
+      <template #title>
+        <div class="custom-dialog-title">警 告</div>
+      </template>
 
-    <span style="font-size: 20px">
-      <strong>你是否要删除用户，确认后操作不可逆。</strong>
-    </span>
-    <template #footer>
-      <div class="dialog-footer">
-        <el-button @click="deleteUserDialogVisible = false">取消</el-button>
-        <el-button type="primary" @click="deleteUserAction">确定</el-button>
-      </div>
-    </template>
-  </el-dialog>
+      <span style="font-size: 20px">
+        <strong>你是否要删除该用户，确认后操作不可逆。</strong>
+      </span>
+      <template #footer>
+        <div class="dialog-footer">
+          <el-button @click="deleteUserDialogVisible = false">取消</el-button>
+          <el-button type="primary" @click="deleteUserAction">确定</el-button>
+        </div>
+      </template>
+    </el-dialog>
+  </div>
 </template>
 
 
@@ -201,5 +233,28 @@ onMounted(() => {
 .custom-dialog-title {
   font-size: 30px; /* 自定义标题字体大小 */
   text-align: center; /* 让标题居中 */
+}
+.search-bar {
+  margin: 20px auto;
+  display: flex;
+  /* align-items: center;
+  justify-content: center; */
+}
+.fixed-header {
+  position: sticky;
+  top: 0;
+  background-color: white;
+  z-index: 1;
+}
+
+.search-bar {
+  display: flex;
+  align-items: center;
+  margin-bottom: 20px;
+}
+
+.search-input {
+  width: 200px;
+  margin-right: 10px;
 }
 </style>

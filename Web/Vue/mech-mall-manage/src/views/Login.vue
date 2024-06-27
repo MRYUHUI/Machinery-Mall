@@ -115,8 +115,6 @@ const onSubmit = async () => {
             userId: user.id,
             account: user.account,
           });
-          console.log(store.getters.userId + ' ' + store.getters.account);
-
           if (user.role === 1) {
             router.push({ name: 'user-home' });
           } else {

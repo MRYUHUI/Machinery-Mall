@@ -26,9 +26,10 @@ const routes = [
 		path: '/admin-home',
 		name: 'admin-home',
 		component: () => import('@/views/AdminHome.vue'),
+		redirect: { name: 'admin-user' },  // 添加默认重定向
 		children: [
 			{
-				path: '/admin-home',
+				path: '',
 				name: 'admin-user',
 				component: () => import('@/components/admin/AdminManageUser.vue'),
 			},

@@ -106,4 +106,15 @@ public class UserServiceImpl implements UserService {
     public User findUserByAccount(String account) {
         return userMapper.fndUserByAccount(account);
     }
+
+    @Override
+    public List<User> searchUsers(String keyword, int page, int size) {
+        int offset = (page - 1) * size;
+        return userMapper.searchUsers(keyword, offset, size);
+    }
+
+    @Override
+    public int countUsersByKeyword(String keyword) {
+        return userMapper.countUsersByKeyword(keyword);
+    }
 }

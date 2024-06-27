@@ -62,4 +62,22 @@ public class AdminUserController {
         json.put("total", total);
         return json;
     }
+    /**
+     * 搜索用户信息
+     * @param keyword 搜索关键词（用户名或姓名）
+     * @param page 当前页码
+     * @param size 每页大小
+     * @return 符合搜索条件的用户信息和总数的 JSON 对象
+     */
+    @GetMapping("/searchUsers")
+    public Object searchUsers(@RequestParam String keyword, @RequestParam int page, @RequestParam int size) {
+        List<User> searchResult = userService.searchUsers(keyword, page, size);
+        int total = userService.countUsersByKeyword(keyword);
+        JSONObject json = getJson("搜索成功", true);
+        System.out.println("=========="+ searchResult);
+        json.put(DATA, searchResult);
+        json.put("total", total);
+        return json;
+    }
+
 }
