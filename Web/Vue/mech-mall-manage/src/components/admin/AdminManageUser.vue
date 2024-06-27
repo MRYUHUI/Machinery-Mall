@@ -4,7 +4,8 @@ import { computed, onMounted, ref, watch } from 'vue'
 import { SystemConsts } from "@/enums/SystemConsts";
 import { useStore } from "vuex";
 import { ElMessage } from "element-plus";
-
+import { ElConfigProvider } from 'element-plus'
+import zhCn from 'element-plus/lib/locale/lang/zh-cn'
 // data
 const store = useStore()
 const userList = ref([])
@@ -114,9 +115,10 @@ onMounted(() => {
       <el-button type="primary" @click="handleSearch">搜索</el-button>
     </div>
     <!-- 用户信息 -->
+    <!-- 设置表长和宽 -->
     <el-table
       :data="userList"
-      style="width: 100%; height: 80%"
+      style="width: 100%; height: 82%"
       class=""
       highlight-current-row
       @selection-change="handleSelectionChange"
@@ -129,12 +131,7 @@ onMounted(() => {
         width="80"
         align="center"
       ></el-table-column>
-      <el-table-column
-        prop="id"
-        :width="columnWidth"
-        label="编号"
-        align="center"
-      />
+      <el-table-column prop="id" width="80px" label="编号" align="center" />
       <el-table-column
         prop="account"
         :width="columnWidth"
@@ -166,12 +163,7 @@ onMounted(() => {
         label="电话"
         align="center"
       />
-      <el-table-column
-        prop="email"
-        :width="columnWidth"
-        label="邮箱"
-        align="center"
-      />
+      <el-table-column prop="email" width="210px" label="邮箱" align="center" />
       <el-table-column label="操作" :width="200" align="center">
         <template #default="{ row }">
           <el-button type="primary" size="mini" @click="handleEdit(row)"
@@ -183,15 +175,17 @@ onMounted(() => {
         </template>
       </el-table-column>
     </el-table>
-    <el-pagination
-      @size-change="handleSizeChange"
-      @current-change="handlePageChange"
-      :current-page="currentPage"
-      :page-size="pageSize"
-      :page-sizes="[1, 3, 5, 8, 10, 12, 20]"
-      layout="total, sizes, prev, pager, next, jumper"
-      :total="totalUsers"
-    />
+    <el-config-provider :locale="zhCn"
+      ><el-pagination
+        @size-change="handleSizeChange"
+        @current-change="handlePageChange"
+        :current-page="currentPage"
+        :page-size="pageSize"
+        :page-sizes="[1, 3, 5, 8, 10, 12, 20]"
+        layout="total, sizes, prev, pager, next, jumper"
+        :total="totalUsers"
+    /></el-config-provider>
+
     <!-- 删除用户警告 -->
     <el-dialog
       v-model="deleteUserDialogVisible"
