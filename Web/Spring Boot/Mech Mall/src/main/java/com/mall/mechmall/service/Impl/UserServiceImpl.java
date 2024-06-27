@@ -9,6 +9,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.Map;
+
 /**
  * @Author:
  * @Date: 2024-06-25-21:59
@@ -69,9 +71,25 @@ public class UserServiceImpl implements UserService {
         return userMapper.updateUserInfo(user) > 0;
     }
 
+    /**
+     * 获取所有普通用户
+     * @param page
+     * @param size
+     * @return List<Map<String, Object>>
+     */
     @Override
-    public List<User> findAllUsers() {
-        return userMapper.fndAllUsers();
+    public List<User> findAllUsers(int page, int size) {
+        int offset = (page - 1) * size;
+        return userMapper.findAllUsers(offset, size);
+    }
+
+    /**
+     * 获取普通用户的数量
+     * @return int
+     */
+    @Override
+    public int countUsers() {
+        return userMapper.countUsers();
     }
 
     @Override

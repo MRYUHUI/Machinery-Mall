@@ -3,6 +3,7 @@ package com.mall.mechmall.service;
 import com.mall.mechmall.domain.User;
 
 import java.util.List;
+import java.util.Map;
 
 /**
  * @Author:
@@ -20,7 +21,8 @@ public interface UserService {
     Boolean updatePasswordByAccount(String account, String password);
     String checkPassword(String account);
     Boolean updateUserInfo(User user);
-    List<User> findAllUsers();
+    List<User> findAllUsers(int page, int size);
+    int countUsers();
     Boolean deleteUser(Integer id);
     User findUserById(Integer id);
     User findUserByAccount(String account);

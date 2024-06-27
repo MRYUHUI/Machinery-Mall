@@ -5,8 +5,7 @@ import installElementPlus from './plugins/element'
 import '@/assets/css/global.css'
 import store from './store';
 
-
-
+import '@/assets/icon-font/iconfont'
 
 
 
