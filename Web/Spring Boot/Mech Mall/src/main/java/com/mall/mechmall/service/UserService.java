@@ -26,4 +26,7 @@ public interface UserService {
     Boolean deleteUser(Integer id);
     User findUserById(Integer id);
     User findUserByAccount(String account);
+    List<User> searchUsers(String keyword, int page, int size);
+
+    int countUsersByKeyword(String keyword);
 }

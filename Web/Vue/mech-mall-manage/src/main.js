@@ -6,10 +6,18 @@ import '@/assets/css/global.css'
 import store from './store';
 
 import '@/assets/icon-font/iconfont'
+// 全局引入ElementPlus组件
+import ElementPlus from 'element-plus'
+import zhLocale from 'element-plus/lib/locale/lang/zh-cn'
+
 
 
 
 
 const app = createApp(App)
 installElementPlus(app)
-app.use(router).use(store).mount('#app')
+app.use(router).use(store)
+app.use(ElementPlus, {
+	locale: zhLocale
+})
+app.mount('#app')

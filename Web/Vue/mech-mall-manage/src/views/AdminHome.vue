@@ -45,7 +45,15 @@ const goToOrderManagePage = () => {
 // computed =========================
 const curActivePageIndex = computed(() => store.getters.activePageIndex)
 onMounted(() => {
-
+  if (curActivePageIndex.value === 2) {
+    router.replace({ name: 'admin-good-type' })
+  }
+  else if (curActivePageIndex.value === 3) {
+    router.replace({ name: 'admin-goods' })
+  }
+  else if (curActivePageIndex.value === 4) {
+    router.replace({ name: 'admin-order' })
+  }
 })
 </script>
 
@@ -61,7 +69,7 @@ onMounted(() => {
     >
       <el-menu
         class="menu-list"
-        :default-active="curActivePageIndex"
+        :default-active="'' + curActivePageIndex"
         :collapse="isCollapse"
         style="height: 100%"
         :defaultOpeneds="['1']"
