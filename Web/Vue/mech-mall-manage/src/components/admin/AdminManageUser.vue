@@ -88,17 +88,21 @@ const handleSearch = async () => {
   searchUsers(searchQuery.value, currentPage.value, pageSize.value)
 }
 // 复选框操作，可以大量删除用户
-const handleSelectionChange = () => [
+const handleSelectionChange = () => {
+}
 
-]
 // computed
 const isAdminUserFresh = computed(() => store.getters.isAdminUserFresh)
-watch(isAdminUserFresh, () => {
-  getAllUsers(currentPage.value, pageSize.value)
+
+
+watch(isAdminUserFresh, (newVal, oldVal) => {
+  if (newVal === oldVal)
+    return
+  searchUsers(searchQuery.value, currentPage.value, pageSize.value)
 })
 // onMounted
 onMounted(() => {
-  getAllUsers(currentPage.value, pageSize.value)
+  searchUsers(searchQuery.value, currentPage.value, pageSize.value)
 })
 </script>
 

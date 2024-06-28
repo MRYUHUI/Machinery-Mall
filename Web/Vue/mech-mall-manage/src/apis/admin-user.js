@@ -1,6 +1,6 @@
 import httpInstance from "@/utils/http";
 
-const adminApi = {
+const adminUserApi = {
 	getAllUsers: (page, size) => httpInstance.get('/admin/allUsers', {
 		params: {
 			page: page,
@@ -20,4 +20,4 @@ const adminApi = {
 	})
 
 };
-export default adminApi;
+export default adminUserApi;
