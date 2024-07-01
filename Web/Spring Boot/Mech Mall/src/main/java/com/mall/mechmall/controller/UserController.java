@@ -44,7 +44,7 @@ public class UserController {
     // 用户登录
     @PostMapping("/do_login.do")
     public Object login(@RequestBody User user) {
-        System.out.println(user);
+//        System.out.println(user);
         Boolean isUserExist = userService.checkUserByAccount(user.getAccount());
         if(!isUserExist){
             return getJson("用户不存在！", false);

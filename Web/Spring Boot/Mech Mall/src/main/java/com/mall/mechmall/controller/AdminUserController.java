@@ -74,7 +74,7 @@ public class AdminUserController {
         List<User> searchResult = userService.searchUsers(keyword, page, size);
         int total = userService.countUsersByKeyword(keyword);
         JSONObject json = getJson("搜索成功", true);
-        System.out.println("=========="+ searchResult);
+//        System.out.println("=========="+ searchResult);
         json.put(DATA, searchResult);
         json.put("total", total);
         return json;
