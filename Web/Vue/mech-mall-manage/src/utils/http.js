@@ -23,13 +23,15 @@ httpInstance.interceptors.request.use(config => {
 }, error => Promise.reject(error));
 
 
-
 // 响应拦截器
 httpInstance.interceptors.response.use(
 	response => response.data,
 	error => {
-		if (error.response) {
-			const status = error.response.status;
+		const { response } = error;
+
+		if (response) {
+			const { status } = response;
+
 			switch (status) {
 				case 401:
 					router.push({ name: "Unauthorized" });
@@ -50,9 +52,14 @@ httpInstance.interceptors.response.use(
 					console.error(`Received status code: ${status}`);
 					break;
 			}
+		} else {
+			console.error('Error without response:', error);
 		}
-		return Promise.reject(error);
+
+		// 返回一个 resolved 状态的 Promise 来抑制 Axios 默认的错误处理
+		return Promise.resolve(error);
 	}
 );
+
 
 export default httpInstance;
