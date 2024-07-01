@@ -56,6 +56,9 @@ public class UserController {
             json.put(DATA, targetUser);
             return json;
         } else {
+//            JSONObject json = getJson("登录成功", true);
+//            json.put(DATA, targetUser);
+//            return json;
             return getJson("用户名或密码错误！", false);
         }
     }

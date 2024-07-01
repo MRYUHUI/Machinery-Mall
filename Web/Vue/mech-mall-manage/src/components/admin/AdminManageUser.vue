@@ -135,7 +135,10 @@ onMounted(() => {
         width="80"
         align="center"
       ></el-table-column>
-      <el-table-column prop="id" width="80px" label="编号" align="center" />
+      <el-table-column prop="id" 
+        width="80px" 
+        label="编号" 
+        align="center" />
       <el-table-column
         prop="account"
         :width="columnWidth"
