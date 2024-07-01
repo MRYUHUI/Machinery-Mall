@@ -2,11 +2,13 @@ import { createStore } from "vuex";
 import createPersistedState from 'vuex-persistedstate';
 import user from "./user";
 import admin from "./admin";
+import product from "./product";
 
 const store = createStore({
 	modules: {
 		user,
 		admin,
+		product,
 	},
 	plugins: [
 		createPersistedState({
