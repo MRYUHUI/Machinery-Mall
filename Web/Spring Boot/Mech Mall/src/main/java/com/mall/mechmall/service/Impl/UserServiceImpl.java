@@ -82,7 +82,6 @@ public class UserServiceImpl implements UserService {
         int offset = (page - 1) * size;
         return userMapper.findAllUsers(offset, size);
     }
-
     /**
      * 获取普通用户的数量
      * @return int
