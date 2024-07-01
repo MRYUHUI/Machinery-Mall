@@ -2,9 +2,7 @@ import { createStore } from "vuex";
 import createPersistedState from 'vuex-persistedstate';
 import user from "./user";
 import admin from "./admin";
-import adminGoodType from "./adminGoodType";
-import adminOrder from "./adminOrder";
-import product from "./product";
+
 
 const store = createStore({
 	modules: {
