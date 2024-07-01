@@ -116,7 +116,7 @@ router.beforeEach((to, from, next) => {
 		// 如果是相同路由，则不进行导航
 		console.log('当前路由与目标路由相同，不进行导航。');
 		next(false); // 阻止导航
-	} else if (to.meta.requireAuth && !token) {
+	} else if (to.meta.requireAuth && !token && to.name != 'user-home') {
 		// 需要用户认证 && 没有登录
 		next({
 			name: 'login'

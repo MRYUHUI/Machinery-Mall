@@ -19,7 +19,7 @@ import static com.mall.mechmall.utils.Consts.getJson;
  * @Description:
  */
 @RestController
-@RequestMapping("/product")
+@RequestMapping("/admin/product")
 public class ProductsController {
     @Autowired
     private ProductService productService;
