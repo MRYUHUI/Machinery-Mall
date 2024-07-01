@@ -29,6 +29,8 @@ public class Consts {
 
     public static final int CODE_500 = 500;
 
+    public static final String TOKEN = "token";
+
     public static Boolean deleteFile(String path) {
         String filePath = System.getProperty("user.dir") + path;
         File file = new File(filePath);

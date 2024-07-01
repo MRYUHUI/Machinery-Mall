@@ -2,13 +2,22 @@ import { createStore } from "vuex";
 import createPersistedState from 'vuex-persistedstate';
 import user from "./user";
 import admin from "./admin";
+<<<<<<< HEAD
 import product from "./product";
+=======
+import adminGoodType from "./adminGoodType";
+
+>>>>>>> 6bce09d549f33257efc61c0ad0d00c9901d1d2bb
 
 const store = createStore({
 	modules: {
 		user,
 		admin,
+<<<<<<< HEAD
 		product,
+=======
+		adminGoodType,
+>>>>>>> 6bce09d549f33257efc61c0ad0d00c9901d1d2bb
 	},
 	plugins: [
 		createPersistedState({
