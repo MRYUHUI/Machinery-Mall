@@ -22,9 +22,26 @@ const searchQuery = ref('')
 // method ===============
 // 获取所有用户
 const getAllUsers = async (page = 1, size = 10) => {
-  const res = await apiRequests.getAllUsers(page, size)
-  userList.value = res.data
-  totalUsers.value = res.total
+  try {
+    const res = await apiRequests.getAllUsers(page, size)
+    userList.value = res.data
+    totalUsers.value = res.total
+  } catch (error) {
+    console.error("API请求失败:", error);
+    // 输出具体的错误信息
+    if (error.response) {
+      // 如果有响应错误（例如 4xx 或 5xx 错误），可以输出响应的状态码和错误信息
+      console.error("响应状态码:", error.response.status);
+      console.error("错误详情:", error.response.data.message); // 假设后端返回的错误信息在data.message中
+    } else if (error.request) {
+      // 如果请求被发出但没有收到响应
+      console.error("请求未收到响应:", error.request);
+    } else {
+      // 其他错误
+      console.error("发生错误:", error.message);
+    }
+  }
+
 }
 
 // 搜索用户

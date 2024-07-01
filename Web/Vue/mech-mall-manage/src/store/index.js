@@ -4,6 +4,7 @@ import user from "./user";
 import admin from "./admin";
 import adminGoodType from "./adminGoodType";
 
+
 const store = createStore({
 	modules: {
 		user,

@@ -62,7 +62,7 @@ import { reactive, ref } from 'vue';
 import { useRouter } from 'vue-router';
 import { ElMessage } from 'element-plus';
 import { useStore } from 'vuex';
-
+import CryptoJS from 'crypto-js';
 const router = useRouter();
 const loginRef = ref(null);
 const store = useStore();
@@ -104,12 +104,18 @@ const onSubmit = async () => {
   loginRef.value.validate(async (valid) => {
     if (valid) {
       try {
-        const res = await apiRequests.signIn(form);
-        console.log(res);
+        // 对密码进行MD5加密
+        const encryptedPassword = CryptoJS.MD5(form.password).toString().toUpperCase();
+        const formData = {
+          ...form,
+          password: encryptedPassword
+        };
+        const res = await apiRequests.signIn(formData);
 
+        // 登录成功
         if (res.success) {
           const user = res.data;
-
+          localStorage.setItem('token', res.token)
           // 调用 Vuex 的 action 存储用户信息
           store.dispatch('saveIdAndAccount', {
             userId: user.id,
@@ -148,13 +154,13 @@ const onSubmit = async () => {
 
 .unactive-shadow {
   border: 5px solid #0055ff6c;
-  box-shadow: 0 0 50px #0044ffec;
+  box-shadow: 0 0 50px #00bfffec;
   transition: all 0.5s;
 }
 
 .active-shadow {
   border: 5px solid #dd00ff6c;
-  box-shadow: 0 0 50px #ff00e696;
+  box-shadow: 0 0 50px #ff00e6c7;
   transition: all 0.5s;
 }
 
