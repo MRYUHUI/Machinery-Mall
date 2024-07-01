@@ -3,7 +3,6 @@ import createPersistedState from 'vuex-persistedstate';
 import user from "./user";
 import admin from "./admin";
 import adminOrder from "./adminOrder";
-
 const store = createStore({
 	modules: {
 		user,
