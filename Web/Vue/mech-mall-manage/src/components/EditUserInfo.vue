@@ -58,20 +58,37 @@ const dialogWidth = '500px';
 const onSubmit = () => {
   editRef.value.validate(async (valid) => {
     if (valid) {
-      const res = await apiRequests.updateUserInfo(form)
-      if (res.success) {
-        const updatedUserInfo = res.data
-        // 调用 store 的 action 保存数据
-        store.dispatch('updateSelectedUserInfo', updatedUserInfo);
-        // 通知管理用户界面刷新
-        store.commit('setIsAdminUserFresh', !store.getters.isAdisAdminUserFresh)
-        ElMessage.success(res.message)
-        resetForm()
-        store.commit('setEditUserInfoDiaVisible', false);
+      try {
+        const res = await apiRequests.updateUserInfo(form)
+        if (res.success) {
+          const updatedUserInfo = res.data
+          // 调用 store 的 action 保存数据
+          store.dispatch('updateSelectedUserInfo', updatedUserInfo);
+          // 通知管理用户界面刷新
+          store.commit('setIsAdminUserFresh', !store.getters.isAdisAdminUserFresh)
+          ElMessage.success(res.message)
+          resetForm()
+          store.commit('setEditUserInfoDiaVisible', false);
+        }
+        else {
+          ElMessage.error(res.message)
+        }
+      } catch (error) {
+        console.error("API请求失败:", error);
+        // 输出具体的错误信息
+        if (error.response) {
+          // 如果有响应错误（例如 4xx 或 5xx 错误），可以输出响应的状态码和错误信息
+          console.error("响应状态码:", error.response.status);
+          console.error("错误详情:", error.response.data.message); // 假设后端返回的错误信息在data.message中
+        } else if (error.request) {
+          // 如果请求被发出但没有收到响应
+          console.error("请求未收到响应:", error.request);
+        } else {
+          // 其他错误
+          console.error("发生错误:", error.message);
+        }
       }
-      else {
-        ElMessage.error(res.message)
-      }
+
     }
   })
 
@@ -87,8 +104,9 @@ const cancelEidt = () => {
 // computed ================
 const userInfo = computed(() => store.getters.selectedUserInfo);
 // 监听 userInfo 的变化，并更新 form
-watch(userInfo, (newUserInfo) => {
-  Object.assign(form, newUserInfo);
+watch(editUserInfoDiaVisible, () => {
+  if (editUserInfoDiaVisible)
+    Object.assign(form, userInfo.value);
 });
 </script>
 

@@ -3,6 +3,7 @@ import apiRequests from '@/apis';
 import { reactive, ref, getCurrentInstance } from 'vue'
 import { useRouter } from 'vue-router';
 import { ElMessage } from 'element-plus';
+import CryptoJS from 'crypto-js';
 // data============================================
 const router = useRouter()
 const registerRef = ref(null)
@@ -65,8 +66,15 @@ const onSubmit = async () => {
   registerRef.value.validate(async (valid) => {
     if (valid) {
       try {
-        const response = await apiRequests.signUp(form);
-        console.log(response);
+        // 对密码进行MD5加密
+        const encryptedPassword = CryptoJS.MD5(form.password).toString().toUpperCase();
+        const formData = {
+          ...form,
+          password: encryptedPassword
+        };
+
+        const response = await apiRequests.signUp(formData);
+        // console.log(response);
 
         if (response.success) {
           // 注册成功处理
@@ -274,12 +282,13 @@ const handleBlur = () => {
 }
 .unactive-shadow {
   border: 5px solid #0055ff6c;
-  box-shadow: 0 0 50px #0044ffec;
+  box-shadow: 0 0 50px #00bfffec;
   transition: all 0.5s;
 }
+
 .active-shadow {
   border: 5px solid #dd00ff6c;
-  box-shadow: 0 0 50px #ff00e696;
+  box-shadow: 0 0 50px #ff00e6c7;
   transition: all 0.5s;
 }
 
