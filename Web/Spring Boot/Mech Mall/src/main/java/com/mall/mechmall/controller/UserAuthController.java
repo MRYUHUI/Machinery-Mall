@@ -16,8 +16,8 @@ import org.springframework.web.bind.annotation.RestController;
 import static com.mall.mechmall.utils.Consts.*;
 
 @RestController
-@RequestMapping("/user")
-public class UserController {
+@RequestMapping("/user/auth")
+public class UserAuthController {
 
     @Autowired
     private UserService userService;

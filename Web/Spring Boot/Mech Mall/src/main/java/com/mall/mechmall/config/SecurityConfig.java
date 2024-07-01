@@ -47,17 +47,30 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
     @Override
     protected void configure(HttpSecurity http) throws Exception {
         http
+                // 禁用 CSRF，因为我们使用 JWT
                 .csrf().disable()
+
+                // 配置请求授权规则
                 .authorizeRequests()
-                .antMatchers("/user/do_register.do", "/user/do_login.do", "/assets").permitAll()
+                // 允许所有人访问注册和登录接口
+                .antMatchers("/user/auth/do_register.do", "/user/auth/do_login.do").permitAll()
+                // 允许所有人访问静态资源
+                .antMatchers("/assets/**").permitAll()
+                // 允许所有人访问 OPTIONS 请求（为了支持跨域请求的预检请求）
                 .antMatchers(HttpMethod.OPTIONS, "/**").permitAll()
+                // 限制 /admin/** 路径只有 ADMIN 角色可以访问
                 .antMatchers("/admin/**").hasRole("ADMIN")
+                // 限制 /user/** 路径只有 USER 和 ADMIN 角色可以访问
+                .antMatchers("/user/**").hasAnyRole("USER", "ADMIN")
+                // 其他任何请求都需要认证
                 .anyRequest().authenticated()
                 .and()
+                // 异常处理配置
                 .exceptionHandling().authenticationEntryPoint(jwtAuthenticationEntryPoint)
                 .and()
+                // 配置会话管理策略为无状态（因为我们使用 JWT）
                 .sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS);
-
+        // 添加 JWT 过滤器，处理每个请求的 JWT 验证
         http.addFilterBefore(new JwtAuthenticationFilter(jwtUtils, userDetailsService), UsernamePasswordAuthenticationFilter.class);
     }
 
