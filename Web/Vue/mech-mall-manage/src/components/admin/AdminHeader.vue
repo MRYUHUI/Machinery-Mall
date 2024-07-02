@@ -8,7 +8,9 @@
       </div>
       <template #dropdown>
         <el-dropdown-menu>
-          <el-dropdown-item class="custom-item">编辑资料</el-dropdown-item>
+          <el-dropdown-item class="custom-item" @click="editAdminInfo"
+            >编辑资料</el-dropdown-item
+          >
           <el-dropdown-item class="custom-item" @click="goToLoginPage"
             >退出登录</el-dropdown-item
           >
@@ -20,17 +22,22 @@
 
 <script setup>
 import { useRouter } from 'vue-router';
-
+import { useStore } from 'vuex';
 const router = useRouter();
+const store = useStore()
 const goToLoginPage = () => {
   // // 设置被激活的页面index = 1
   // store.commit('setActivePageIndex', 1)
   localStorage.removeItem('token')
   router.replace({ path: '/' })
 }
-// onMounted(() => {
-//   router.push({ name: 'login' })
-// })
+const editAdminInfo = () => {
+  const adminInfo = store.getters.curUserInfo
+  // 将要编辑的用户信息存入 store 里
+  store.dispatch('updateSelectedUserInfo', adminInfo)
+  // 显示编辑用户对话框
+  store.commit('setEditUserInfoDiaVisible', true)
+}
 </script>
 
 <style scoped>

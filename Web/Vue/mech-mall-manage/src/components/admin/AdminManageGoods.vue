@@ -245,8 +245,8 @@ function beforeImgUpload (file) {
         <template v-slot="{ row }">
           <el-switch
             v-model="row.status"
-            active-text="下架"
-            inactive-text="上架"
+            active-text="上架"
+            inactive-text="下架"
             :active-value="3"
             :inactive-value="2"
             @change="handleStatusChange(row)"

@@ -54,9 +54,8 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
 
                 // 配置请求授权规则
                 .authorizeRequests()
-                .antMatchers("/**").permitAll()
                 // 允许所有人访问注册和登录接口
-                .antMatchers("/user/auth/do_register.do", "/user/auth/do_login.do").permitAll()
+                .antMatchers("/user/auth/**").permitAll()
                 // 允许所有人访问静态资源
                 .antMatchers("/static/**").permitAll() // 指定静态资源路径
                 .antMatchers("/static/img/**").permitAll()

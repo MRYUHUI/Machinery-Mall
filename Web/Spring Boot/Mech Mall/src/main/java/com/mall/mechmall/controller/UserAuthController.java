@@ -9,10 +9,10 @@ import com.mall.mechmall.utils.JwtUtils;
 import com.mall.mechmall.utils.MD5Utils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
+
+import java.sql.Struct;
+
 import static com.mall.mechmall.utils.Consts.*;
 
 @RestController
@@ -88,4 +88,30 @@ public class UserAuthController {
             return Consts.getJson("登录失败：" + e.getMessage(), false);
         }
     }
+
+    @GetMapping("find/account")
+    public Object findUserByAccount(@RequestParam String account) {
+        User user = userService.findUserByAccount(account);
+        JSONObject json;
+        if (user != null) {
+            json = getJson("获取用户成功", true);
+            json.put(DATA, user);
+        } else
+            json = getJson("用户名不存在", false);
+        return json;
+    }
+
+    @PostMapping("/update/password")
+    public JSONObject updatePassword(@RequestBody User user) {
+
+        try {
+            if (userService.updateUserInfo(user)) {
+                return getJson("密码更新成功", true);
+            }
+        } catch (Exception e) {
+            return Consts.getJson(e.getMessage(), false);
+        }
+        return getJson("密码更新成功", true);
+    }
+
 }

@@ -2,27 +2,47 @@ export default {
 	state: {
 		userId: "", // 用户ID
 		account: "", // 用户名
-		selectedUserInfo: { // 被选中的用户的信息，如：管理员编辑用户
-			id: '',
-			account: '',
-			password: '',
-			email: '',
-			phone: '',
-			question: '',
-			asw: '',
-			role: '',
-			age: '',
-			sex: '',
-			create_time: '',
-			update_time: '',
-			del: '',
-			name: ''
-		}
+		curUserInfo: {
+			id: null,
+			account: null,
+			password: null,
+			email: null,
+			phone: null,
+			question: null,
+			asw: null,
+			role: null,
+			age: null,
+			sex: null,
+			createTime: null,
+			updateTime: null,
+			del: null,
+			name: null
+		},
+		selectedUserInfo: {
+			id: null,
+			account: null,
+			password: null,
+			email: null,
+			phone: null,
+			question: null,
+			asw: null,
+			role: null,
+			age: null,
+			sex: null,
+			createTime: null,
+			updateTime: null,
+			del: null,
+			name: null
+		}// 被选中的用户的信息，如：管理员编辑用户
 	},
+	changePwdPageVisible: false, // 修改密码对话框
+
 	getters: {
 		userId: (state) => state.userId,
 		account: (state) => state.account,
 		selectedUserInfo: (state) => state.selectedUserInfo,
+		curUserInfo: (state) => state.curUserInfo,
+		changePwdPageVisible: (state) => state.changePwdPageVisible
 	},
 	mutations: {
 		setUserId: (state, userId) => {
@@ -30,6 +50,9 @@ export default {
 		},
 		setAccount: (state, account) => {
 			state.account = account;
+		},
+		setCurUserInfo: (state, curUserInfo) => {
+			state.curUserInfo = curUserInfo
 		},
 		// 更新整个 selectedUserInfo 
 		updateSelectedUserInfo: (state, selectedUserInfo) => {
@@ -40,6 +63,47 @@ export default {
 			if (state.selectedUserInfo.hasOwnProperty(field)) {
 				state.selectedUserInfo[field] = value;
 			}
+		},
+		// 重置 curUserInfo
+		resetCurUserInfo: (state) => {
+			state.curUserInfo = {
+				id: null,
+				account: null,
+				password: null,
+				email: null,
+				phone: null,
+				question: null,
+				asw: null,
+				role: null,
+				age: null,
+				sex: null,
+				createTime: null,
+				updateTime: null,
+				del: null,
+				name: null
+			};
+		},
+		// 重置 selectedUserInfo
+		resetSelectedUserInfo: (state) => {
+			state.selectedUserInfo = {
+				id: null,
+				account: null,
+				password: null,
+				email: null,
+				phone: null,
+				question: null,
+				asw: null,
+				role: null,
+				age: null,
+				sex: null,
+				createTime: null,
+				updateTime: null,
+				del: null,
+				name: null
+			};
+		},
+		setChangePwdPageVisible: (state, changePwdPageVisible) => {
+			state.changePwdPageVisible = changePwdPageVisible
 		}
 	},
 	actions: {
@@ -54,6 +118,10 @@ export default {
 		// 更新 selectedUserInfo 单个字段
 		updateSelectedUserInfoField ({ commit }, { field, value }) {
 			commit('updateSelectedUserInfoField', { field, value });
+		},
+		// 重置 selectedUserInfo
+		resetSelectedUserInfo ({ commit }) {
+			commit('resetSelectedUserInfo');
 		}
 	}
 };

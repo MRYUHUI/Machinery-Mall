@@ -1,60 +1,3 @@
-<template>
-  <div class="container">
-    <div
-      :class="{
-        login: true,
-        'active-shadow': isFocused,
-        'unactive-shadow': !isFocused,
-      }"
-    >
-      <el-form
-        :model="form"
-        label-width="auto"
-        style="max-width: 800px"
-        :rules="loginRule"
-        ref="loginRef"
-      >
-        <!-- 用户名 -->
-        <el-form-item label="用户名" prop="account">
-          <el-input
-            v-model="form.account"
-            :style="{ width: '350px' }"
-            @focus="handleFocus"
-            @blur="handleBlur"
-          />
-        </el-form-item>
-        <!-- 密码 -->
-        <el-form-item label="密码" prop="password">
-          <el-input
-            v-model="form.password"
-            :type="showPassword ? 'text' : 'password'"
-            @focus="handleFocus"
-            @blur="handleBlur"
-          >
-            <template #suffix>
-              <i
-                :class="'el-icon-view'"
-                @click="togglePasswordVisibility"
-                style="cursor: pointer"
-              ></i>
-            </template>
-          </el-input>
-        </el-form-item>
-        <!-- 忘记密码 -->
-        <el-button type="text" class="forgot-password">忘记密码?</el-button>
-        <el-form-item>
-          <!-- 登录按钮 -->
-          <el-button class="btn-list" type="primary" @click="onSubmit"
-            >登录</el-button
-          >
-          <el-button class="register-button btn-list" @click="signUp"
-            >注册</el-button
-          >
-        </el-form-item>
-      </el-form>
-    </div>
-  </div>
-</template>
 
 <script setup>
 import apiRequests from '@/apis';
@@ -63,15 +6,18 @@ import { useRouter } from 'vue-router';
 import { ElMessage } from 'element-plus';
 import { useStore } from 'vuex';
 import CryptoJS from 'crypto-js';
+import ChangePasswordDiaVue from '@/components/user/ChangePasswordDia.vue';
 const router = useRouter();
 const loginRef = ref(null);
 const store = useStore();
-
+const forgotPwdPageVisible = ref(false)
+const forgotPwdQuestion = ref('')
+const forgotPwdAnswer = ref('')
+const correctAnswer = ref('')
 const form = reactive({
   account: '',
   password: '',
 });
-
 const loginRule = {
   account: [{ required: true, message: '用户名不能为空', trigger: 'blur' }],
   password: [
@@ -115,6 +61,8 @@ const onSubmit = async () => {
         // 登录成功
         if (res.success) {
           const user = res.data;
+          store.commit('setCurUserInfo', user)
+
           localStorage.setItem('token', res.token)
           // 调用 Vuex 的 action 存储用户信息
           store.dispatch('saveIdAndAccount', {
@@ -138,7 +86,119 @@ const onSubmit = async () => {
   });
 };
 
+const handleForgotPwd = async () => {
+  // 如果未输入用户名
+  if (form.account === '' || form.account === null) {
+    // 提示未输入用户名
+    ElMessage.error("请先输入用户名")
+    return
+  }
+  const account = form.account
+  const res = await apiRequests.findUserByAccount(account)
+  if (res.success) {
+    const user = res.data
+    store.commit('setUserId', user.id)
+    forgotPwdQuestion.value = user.question
+    correctAnswer.value = user.asw
+    forgotPwdPageVisible.value = true
+  } else {
+    ElMessage.error(res.message)
+  }
+}
+
+const validateAnswer = () => {
+  // 回答正确
+  if (forgotPwdAnswer.value === correctAnswer.value) {
+    // 关闭问答对话框
+    forgotPwdPageVisible.value = false
+    // 开启修改密码对话框
+    store.commit('setChangePwdPageVisible', true)
+    store.dispatch('resetSelectedUserInfo')
+  } else {
+    ElMessage.error("回答错误")
+  }
+}
+
 </script>
+<template>
+  <div class="container">
+    <div
+      :class="{
+        login: true,
+        'active-shadow': isFocused,
+        'unactive-shadow': !isFocused,
+      }"
+    >
+      <el-form
+        :model="form"
+        label-width="auto"
+        style="max-width: 800px"
+        :rules="loginRule"
+        ref="loginRef"
+      >
+        <!-- 用户名 -->
+        <el-form-item label="用户名" prop="account">
+          <el-input
+            v-model="form.account"
+            :style="{ width: '350px' }"
+            @focus="handleFocus"
+            @blur="handleBlur"
+          />
+        </el-form-item>
+        <!-- 密码 -->
+        <el-form-item label="密码" prop="password">
+          <el-input
+            v-model="form.password"
+            :type="showPassword ? 'text' : 'password'"
+            @focus="handleFocus"
+            @blur="handleBlur"
+          >
+            <template #suffix>
+              <i
+                :class="'el-icon-view'"
+                @click="togglePasswordVisibility"
+                style="cursor: pointer"
+              ></i>
+            </template>
+          </el-input>
+        </el-form-item>
+        <!-- 忘记密码 -->
+        <el-button type="text" class="forgot-password" @click="handleForgotPwd"
+          >忘记密码?</el-button
+        >
+        <el-form-item>
+          <!-- 登录按钮 -->
+          <el-button class="btn-list" type="primary" @click="onSubmit"
+            >登录</el-button
+          >
+          <el-button class="register-button btn-list" @click="signUp"
+            >注册</el-button
+          >
+        </el-form-item>
+      </el-form>
+    </div>
+  </div>
+  <!-- 忘记密码的问题 -->
+  <el-dialog
+    v-model="forgotPwdPageVisible"
+    :close-on-click-modal="false"
+    :show-close="false"
+    title="找回密码"
+    width="500px"
+  >
+    <div class="content">
+      <p class="question">{{ forgotPwdQuestion }}</p>
+      <el-input v-model="forgotPwdAnswer" placeholder="请输入答案"></el-input>
+    </div>
+    <template #footer>
+      <el-button @click="forgotPwdPageVisible = false">取消</el-button>
+      <el-button type="primary" @click="validateAnswer">确认</el-button>
+    </template>
+  </el-dialog>
+  <!-- 修改密码对话框 -->
+  <ChangePasswordDiaVue></ChangePasswordDiaVue>
+</template>
+
 
 <style>
 .login {
@@ -181,5 +241,16 @@ const onSubmit = async () => {
 .btn-list {
   width: 100px;
   margin: 10px;
+}
+
+.content {
+  display: flex;
+  flex-direction: column;
+  gap: 20px; /* 控制问题文本与输入框的间距 */
+}
+
+.question {
+  font-size: 18px; /* 控制问题文本的字体大小 */
+  margin-bottom: 10px; /* 控制问题文本与输入框的间距 */
 }
 </style>
