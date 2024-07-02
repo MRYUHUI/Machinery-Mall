@@ -7,7 +7,7 @@ import adminGoodTypeApi from './admin-good-type'
 
 const apiRequests = {
 	// 获取图片url
-	attachImageUrl: (url) => url ? `${SystemConsts.BASE_URL}${url}` : "",
+	attachImageUrl: (url) => `${SystemConsts.BASE_URL}${url}`,
 	...userApi,
 	...adminUserApi,
 	...adminGoodsApi,

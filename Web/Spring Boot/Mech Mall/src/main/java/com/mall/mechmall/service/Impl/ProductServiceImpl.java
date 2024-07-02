@@ -34,7 +34,7 @@ public class ProductServiceImpl implements ProductService {
     }
 
     @Override
-    public List<Product> findProductById(Integer id){
+    public Product findProductById(Integer id){
         return productMapper.findProductById(id);
     }
 

@@ -26,7 +26,10 @@ const adminGoodsApi = {
 			page: page,
 			size: size
 		}
-	})
+	}),
+
+	// // 更新商品图片
+	// updateGoodsImg: ()
 
 
 };

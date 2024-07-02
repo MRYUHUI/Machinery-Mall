@@ -4,9 +4,13 @@ import com.alibaba.fastjson.JSONObject;
 import com.mall.mechmall.domain.ProductCategory;
 import com.mall.mechmall.domain.User;
 import com.mall.mechmall.service.ProductCategoryService;
+import com.mall.mechmall.utils.Consts;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 
+import java.io.File;
+import java.io.IOException;
 import java.util.List;
 import java.util.Map;
 
@@ -109,4 +113,5 @@ public class ProductCategoryController {
         json.put("total", total);
         return json;
     }
+
 }

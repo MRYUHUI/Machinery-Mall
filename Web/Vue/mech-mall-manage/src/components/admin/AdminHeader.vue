@@ -4,12 +4,14 @@
     <h1 class="loge">机械<span>平台</span></h1>
     <el-dropdown>
       <div class="admin-button">
-        你好！管理员<el-icon class="el-icon--right"><arrow-down /></el-icon>
+        你好！管理员<el-icon class="el-icon--right"></el-icon>
       </div>
       <template #dropdown>
         <el-dropdown-menu>
           <el-dropdown-item class="custom-item">编辑资料</el-dropdown-item>
-          <el-dropdown-item class="custom-item" @click="goToLoginPage">退出登录</el-dropdown-item>
+          <el-dropdown-item class="custom-item" @click="goToLoginPage"
+            >退出登录</el-dropdown-item
+          >
         </el-dropdown-menu>
       </template>
     </el-dropdown>
@@ -32,7 +34,7 @@ const goToLoginPage = () => {
 </script>
 
 <style scoped>
- /* 管理后台导航内容 */
+/* 管理后台导航内容 */
 .admin-header {
   display: flex;
   justify-content: flex-end; /* 将内容右对齐 */

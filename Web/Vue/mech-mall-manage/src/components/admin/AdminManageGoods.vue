@@ -24,8 +24,9 @@ const searchQuery = ref('')
 
 //method
 //获取所有产品
-const getAllProduct = async (page = 1, size = 10)=> {
+const getAllProduct = async (page = 1, size = 10) => {
   const res = await apiRequests.getAllProduct(page, size)
+  console.log(res.data)
   productList.value = res.data
   totalProduct.value = res.total
 }
@@ -61,7 +62,7 @@ const handleSearch = async () => {
   searchProduct(searchQuery.value, currentPage.value, pageSize.value)
 }
 //添加用户
-const handleAddProduct = async () =>{
+const handleAddProduct = async () => {
   //显示对话框
   store.commit('setAddProductInfoDiaVisible', true)
 }
@@ -73,22 +74,40 @@ const handleEdit = (product) => {
   store.commit('setEditProductInfoDiaVisible', true)
 
 }
-//修改状态
-const handleHotButtonClick = async(row) => {
-      // Toggle isHot value between 1 and 2
-    row.isHot = row.isHot === 1 ? 2 : 1;
-    const res = await apiRequests.updateStatus(row)
-    if(res.success){
-      ElMessage.success(res.message)
-      console.log(row)
-      // 刷新
-      searchProduct(searchQuery.value, currentPage.value, pageSize.value)
-    }else {
-    ElMessage.error(res.message)
+//修改热销状态
+const handleIsHotChange = async (row) => {
+  try {
+    const res = await apiRequests.updateStatus(row);
+    if (res.success) {
+      ElMessage.success('状态更新成功');
+    } else {
+      ElMessage.error(res.message || '状态更新失败');
+      // 如果更新失败，恢复开关状态
+      row.isHot = !row.isHot;
+    }
+  } catch (error) {
+    console.error('状态更新失败', error);
+    // 如果更新失败，恢复开关状态
+    row.isHot = !row.isHot;
   }
-
-}
-
+};
+//修改出售状态
+const handleStatusChange = async (row) => {
+  try {
+    const res = await apiRequests.updateStatus(row);
+    if (res.success) {
+      ElMessage.success('状态更新成功');
+    } else {
+      ElMessage.error(res.message || '状态更新失败');
+      // 如果更新失败，恢复开关状态
+      row.status = !row.status;
+    }
+  } catch (error) {
+    console.error('状态更新失败', error);
+    // 如果更新失败，恢复开关状态
+    row.status = !row.status;
+  }
+};
 // 删除用户
 const handleDelete = (product) => {
   deleteProductDialogVisible.value = true
@@ -107,34 +126,6 @@ const deleteProductAction = async () => {
   }
 }
 
-//改变状态
-const getStatusText = (status) => {
-      switch (status) {
-        case 1:
-          return '待售';
-        case 2:
-          return '出售';
-        case 3:
-          return '停售';
-        default:
-          return '未知状态';
-      }
-}
-const handleStatusButtonClick = async(row) => {
-      // 状态在点击之后只有上架和停售  待售是初始状态
-    row.status = row.status === 2 ? 3 : 2;
-    const res = await apiRequests.updateStatus(row)
-    if(res.success){
-      ElMessage.success(res.message)
-      console.log(row)
-      // 刷新
-      searchProduct(searchQuery.value, currentPage.value, pageSize.value)
-    }else {
-    ElMessage.error(res.message)
-  }
-
-}
-
 const isAdminProductFresh = computed(() => store.getters.isAdminProductFresh)
 
 watch(isAdminProductFresh, (newVal, oldVal) => {
@@ -146,11 +137,40 @@ watch(isAdminProductFresh, (newVal, oldVal) => {
 onMounted(() => {
   searchProduct(searchQuery.value, currentPage.value, pageSize.value)
 })
-getAllProduct();
+
+// 上传图片
+const uploadUrl = (id) => {
+  return apiRequests.attachImageUrl(`/admin/product/img/update?id=${id}`)
+}
+
+const handleImgSuccess = (res, file) => {
+  if (res.success) {
+    searchProduct(searchQuery.value, currentPage.value, pageSize.value)
+    ElMessage.success(res.message)
+  }
+  else {
+    ElMessage.error(res.message)
+  }
+}
+function beforeImgUpload (file) {
+  const uploadTypes = ref(["jpg", "jpeg", "png", "gif"]);
+  const ltCode = 10;
+  const isLt2M = file.size / 1024 / 1024 < ltCode;
+  const isExistFileType = uploadTypes.value.includes(file.type.replace(/image\//, ""));
+
+  if (!isExistFileType) {
+    ElMessage.error(`图片只支持 ${uploadTypes.value.join("、")} 格式!`);
+  }
+  if (!isLt2M) {
+    ElMessage.error(`上传头像图片大小不能超过 ${ltCode}MB!`);
+  }
+
+  return isExistFileType && isLt2M;
+}
 </script>
 
 <template>
-  <div class="admin-goods">
+  <div class="admin-contianer">
     <!-- 搜索栏 -->
     <div class="search-bar">
       <el-input
@@ -161,11 +181,11 @@ getAllProduct();
       />
       <el-button type="primary" @click="handleSearch">搜索</el-button>
 
-        <!-- 增加商品按钮 -->
-    <div class="add-product-button">
-      <el-button type="primary" @click="handleAddProduct">增加商品</el-button>
+      <!-- 增加商品按钮 -->
+      <div class="add-product-button">
+        <el-button type="primary" @click="handleAddProduct">增加商品</el-button>
+      </div>
     </div>
-  </div>
 
     <!-- 产品信息表格 -->
     <el-table
@@ -178,53 +198,82 @@ getAllProduct();
       :cell-style="SystemConsts.cellStyle"
       :header-cell-class-name="'fixed-header'"
     >
-      <el-table-column type="selection" width="80" align="center"></el-table-column>
-      <el-table-column prop="id" width="80px" label="编号" align="center" />
-      <el-table-column prop="name" :width="columnWidth" label="商品名称" align="center" />
-      <el-table-column prop="price" :width="columnWidth" label="价格" align="center" />
-      <el-table-column prop="status" :width="columnWidth" label="状态" align="center">
+      <!-- 复选框 -->
+      <el-table-column
+        type="selection"
+        width="80"
+        align="center"
+      ></el-table-column>
+      <!-- id -->
+      <el-table-column prop="id" width="100px" label="编号" align="center" />
+      <!-- 商品名称 -->
+      <el-table-column
+        prop="name"
+        :width="columnWidth"
+        label="商品名称"
+        align="center"
+      />
+      <!-- 商品图片 -->
+      <el-table-column prop="iconUrl" width="120px" label="图片" align="center">
         <template v-slot="{ row }">
-          <el-button
-            :type="['priamry','danger']"
-            :size="'mini'"
+          <el-image
+            class="good-img"
+            :src="apiRequests.attachImageUrl(row.iconUrl)"
+            alt="product image"
+            style="width: 80px; height: 80px"
+            fit="cover"
+          />
+          <el-upload
+            :action="uploadUrl(row.id)"
+            :show-file-list="false"
+            :on-success="handleImgSuccess"
+            :before-upload="beforeImgUpload"
           >
-            {{ getStatusText(row.status) }}
-          </el-button>
-
-          <el-button
-            class="custom-red-button"
-            :type="['priamry', 'danger']"
-            :size="'mini'"
-            @click="handleStatusButtonClick(row)" 
-          >
-            {{ row.status === 2 ? '上架' : '下架' }}
-          </el-button>
-
+            <el-button>更新图片</el-button>
+          </el-upload>
         </template>
       </el-table-column>
-      <el-table-column prop="isHot" :width="columnWidth" label="是否热销" align="center">
+      <!-- 价格 -->
+      <el-table-column prop="price" width="150px" label="价格" align="center" />
+      <!-- 状态 -->
+      <el-table-column
+        prop="status"
+        :width="columnWidth / 2"
+        label="状态"
+        align="center"
+      >
         <template v-slot="{ row }">
-          <el-button
-            :type="danger"
-            :size="'mini'"
+          <el-switch
+            v-model="row.status"
+            active-text="下架"
+            inactive-text="上架"
+            :active-value="3"
+            :inactive-value="2"
+            @change="handleStatusChange(row)"
           >
-            {{ row.isHot === 1 ? '热销' : '一般' }}
-          </el-button>
-
-          <el-button
-            class="custom-red-button"
-            :type="danger"
-            :size="'mini'"
-            @click="handleHotButtonClick(row)" 
-          >
-            {{ row.isHot === 1 ? '非热销' : '热销' }}
-          </el-button>
-
+          </el-switch>
         </template>
       </el-table-column>
-
-
-
+      <!-- 热销 -->
+      <el-table-column
+        prop="isHot"
+        :width="columnWidth / 2"
+        label="是否热销"
+        align="center"
+      >
+        <template v-slot="{ row }">
+          <el-switch
+            v-model="row.isHot"
+            active-text="一般"
+            inactive-text="热销"
+            :active-value="1"
+            :inactive-value="2"
+            @change="handleIsHotChange(row)"
+          >
+          </el-switch>
+        </template>
+      </el-table-column>
+      <!-- 操作 -->
       <el-table-column label="操作" :width="200" align="center">
         <template #default="{ row }">
           <el-button type="primary" size="mini" @click="handleEdit(row)"
@@ -265,15 +314,18 @@ getAllProduct();
       </span>
       <template #footer>
         <div class="dialog-footer">
-          <el-button @click="deleteProductDialogVisible = false">取消</el-button>
-          <el-button type="primary" @click="deleteProductAction">确定</el-button>
+          <el-button @click="deleteProductDialogVisible = false"
+            >取消</el-button
+          >
+          <el-button type="primary" @click="deleteProductAction"
+            >确定</el-button
+          >
         </div>
       </template>
     </el-dialog>
 
     <EditProdutInfo></EditProdutInfo>
     <AddProductInfo></AddProductInfo>
-
   </div>
 </template>
 
@@ -311,7 +363,7 @@ getAllProduct();
 }
 
 .add-product-button .el-button {
-  background-color: #409eff; 
+  background-color: #409eff;
   color: #fff; /* 设置按钮文字颜色为白色 */
 }
 

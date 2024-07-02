@@ -12,7 +12,7 @@ import java.util.List;
 public interface ProductService {
     List<Product> findAllProduct(int page, int size);
     int countProduct();
-    List<Product> findProductById(Integer id);
+    Product findProductById(Integer id);
     List<Product> searchProduct(String keyword, int page, int size);
     int countProductByKeyword(String keyword);
 

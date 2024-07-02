@@ -19,7 +19,7 @@ public interface ProductMapper {
     public int countProduct();
 
     @Select("SELECT * FROM products WHERE id = #{id}")
-    public List<Product> findProductById(@Param("id") Integer id);
+    public Product findProductById(@Param("id") Integer id);
 
     @Select("SELECT id, name, price, status, product_id, parts_id, icon_url, is_hot FROM products WHERE id LIKE CONCAT('%', #{keyword}, '%') OR name LIKE CONCAT('%', #{keyword}, '%') LIMIT #{offset}, #{size}")
     List<Product> searchProduct(@Param("keyword") String keyword, @Param("offset") int offset, @Param("size") int size);
@@ -48,7 +48,7 @@ public interface ProductMapper {
             "<if test='name != null'>name = #{name},</if>",
             "<if test='productId != null'>product_id = #{productId},</if>",
             "<if test='partsId != null'>parts_id = #{partsId},</if>",
-            "<if test='iconUrl != null'>icon_uri = #{iconUrl},</if>",
+            "<if test='iconUrl != null'>icon_url = #{iconUrl},</if>",
             "<if test='subImages != null'>sub_images = #{subImages},</if>",
             "<if test='detail != null'>detail = #{detail},</if>",
             "<if test='specParam != null'>spec_param = #{specParam},</if>",

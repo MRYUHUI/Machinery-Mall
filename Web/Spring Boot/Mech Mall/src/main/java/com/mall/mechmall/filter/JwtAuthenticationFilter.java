@@ -52,10 +52,11 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
             filterChain.doFilter(request, response);
             return;
         }
-
         // 从请求头中获取JWT Token
         String jwt = parseJwt(request);
         // 验证JWT Token的有效性并设置认证信息到Spring Security上下文中
+        System.out.println("jwt: " + jwt);
+        System.out.println("validate: " + jwtUtils.validateToken(jwt));
         if (jwt != null) {
             try {
                 if (jwtUtils.validateToken(jwt)) {
