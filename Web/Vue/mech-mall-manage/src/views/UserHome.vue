@@ -1,5 +1,7 @@
 <script setup>
 import UserHeaderVue from "@/components/user/UserHeader.vue";
+import ChangePasswordDia from "@/components/user/ChangePasswordDia.vue";
+import EditUserInfo from "@/components/EditUserInfo.vue";
 import { useRouter } from "vue-router";
 const router = useRouter()
 const doLogin = () => {
@@ -14,13 +16,16 @@ const doRegister = () => {
 <template>
   <div class="home">
     <UserHeaderVue> </UserHeaderVue>
-    <button @click="doLogin">登录</button>
-    <button @click="doRegister">注册</button>
-    UserHome
+    <router-view></router-view>
+    <ChangePasswordDia></ChangePasswordDia>
+    <EditUserInfo></EditUserInfo>
   </div>
 </template>
 
 
 
 <style>
+.home {
+  width: 1600px;
+}
 </style>

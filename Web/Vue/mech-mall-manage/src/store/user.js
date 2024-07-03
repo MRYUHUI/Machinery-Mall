@@ -2,6 +2,8 @@ export default {
 	state: {
 		userId: "", // 用户ID
 		account: "", // 用户名
+		isLogin: false, // 是否登录
+		role: 1,
 		curUserInfo: {
 			id: null,
 			account: null,
@@ -40,6 +42,8 @@ export default {
 	getters: {
 		userId: (state) => state.userId,
 		account: (state) => state.account,
+		isLogin: (state) => state.isLogin,
+		role: (state) => state.role,
 		selectedUserInfo: (state) => state.selectedUserInfo,
 		curUserInfo: (state) => state.curUserInfo,
 		changePwdPageVisible: (state) => state.changePwdPageVisible
@@ -50,6 +54,12 @@ export default {
 		},
 		setAccount: (state, account) => {
 			state.account = account;
+		},
+		setIsLogin: (state, isLogin) => {
+			state.isLogin = isLogin
+		},
+		setRole: (state, role) => {
+			state.role = role
 		},
 		setCurUserInfo: (state, curUserInfo) => {
 			state.curUserInfo = curUserInfo
@@ -110,6 +120,8 @@ export default {
 		saveIdAndAccount ({ commit }, userInfo) {
 			commit('setUserId', userInfo.userId);
 			commit('setAccount', userInfo.account);
+			commit('setRole', userInfo.role)
+			commit('setIsLogin', true)
 		},
 		// 更新整个 selectedUserInfo 
 		updateSelectedUserInfo ({ commit }, selectedUserInfo) {

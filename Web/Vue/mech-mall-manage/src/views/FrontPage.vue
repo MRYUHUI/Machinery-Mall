@@ -1,13 +1,9 @@
 <script setup>
-
-
-
+import HomeHot from './Home/HomeHot.vue'
 </script>
 
 <template>
-  <router-view></router-view>
+  <HomeHot></HomeHot>
 </template>
-
-
 <style>
 </style>

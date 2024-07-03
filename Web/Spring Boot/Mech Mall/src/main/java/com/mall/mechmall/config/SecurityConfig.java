@@ -56,10 +56,12 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                 .authorizeRequests()
                 // 允许所有人访问注册和登录接口
                 .antMatchers("/user/auth/**").permitAll()
+                .antMatchers("/admin/product/img/update/**").permitAll()
                 // 允许所有人访问静态资源
                 .antMatchers("/static/**").permitAll() // 指定静态资源路径
                 .antMatchers("/static/img/**").permitAll()
                 .antMatchers("/static/img/goods/**").permitAll()
+                .antMatchers("/commodity/**").permitAll()
                 // 允许所有人访问 OPTIONS 请求（为了支持跨域请求的预检请求）
                 .antMatchers(HttpMethod.OPTIONS, "/**").permitAll()
                 // 限制 /admin/** 路径只有 ADMIN 角色可以访问

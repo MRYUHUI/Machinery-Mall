@@ -37,7 +37,7 @@ const searchProduct = async (query, page = 1, size = 10) => {
     return;
   }
   const res = await apiRequests.searchProduct(query, page, size);
-  console.log(res);
+
 
   productList.value = res.data;
   totalProduct.value = res.total;
@@ -146,6 +146,7 @@ const uploadUrl = (id) => {
 const handleImgSuccess = (res, file) => {
   if (res.success) {
     searchProduct(searchQuery.value, currentPage.value, pageSize.value)
+
     ElMessage.success(res.message)
   }
   else {
@@ -229,7 +230,7 @@ function beforeImgUpload (file) {
             :on-success="handleImgSuccess"
             :before-upload="beforeImgUpload"
           >
-            <el-button>更新图片</el-button>
+            <el-button class="custom-button">更新图片</el-button>
           </el-upload>
         </template>
       </el-table-column>
@@ -374,5 +375,12 @@ function beforeImgUpload (file) {
 .custom-red-button {
   background-color: rgb(222, 32, 32);
   color: white;
+}
+
+.custom-button {
+  padding: 0 5px;
+  height: 30px;
+  width: 80px;
+	overflow: hidden;
 }
 </style>

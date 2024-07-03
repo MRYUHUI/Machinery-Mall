@@ -39,7 +39,7 @@ public interface ProductMapper {
     public int checkProductByName(@Param("name") String name);
 
     @Delete("DELETE FROM products WHERE id = #{id}")
-    public int deleteProduct(@Param("id" ) Integer id);
+    public int deleteProduct(@Param("id") Integer id);
 
     @Update({
             "<script>",
@@ -62,4 +62,9 @@ public interface ProductMapper {
     })
     public int updateProduct(Product product);
 
+    @Select("SELECT * FROM products WHERE status = 3 AND is_hot = 1")
+    List<Product> findAllProductsByStatusAndHot();
+
+    @Select("SELECT * FROM products WHERE status = 3 AND is_hot = 1 LIMIT #{limit}")
+    List<Product> findProductsByStatusAndHotWithLimit(@Param("limit") int limit);
 }

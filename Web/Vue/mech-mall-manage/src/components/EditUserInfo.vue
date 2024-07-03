@@ -43,8 +43,14 @@ const dialogWidth = '500px';
 const onSubmit = () => {
   editRef.value.validate(async (valid) => {
     if (valid) {
+      let res
       try {
-        const res = await apiRequests.updateUserInfo(form)
+        if (store.getters.role === 2) {
+          res = await apiRequests.updateUserInfo(form)
+        }
+        else {
+          res = await apiRequests.editUserInfo(form)
+        }
         if (res.success) {
           const updatedUserInfo = res.data
           // 调用 store 的 action 保存数据

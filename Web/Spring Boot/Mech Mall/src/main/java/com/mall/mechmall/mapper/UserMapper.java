@@ -64,7 +64,6 @@ public interface UserMapper {
     })
     public int updateUserInfo(User user);
 
-
     @Select("SELECT id, account, email, phone, age, sex, name FROM users WHERE role = 1 LIMIT #{offset}, #{size}")
     public List<User> findAllUsers(@Param("offset") int offset, @Param("size") int size);
 

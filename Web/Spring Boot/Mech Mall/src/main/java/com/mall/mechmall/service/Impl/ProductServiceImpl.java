@@ -73,4 +73,14 @@ public class ProductServiceImpl implements ProductService {
         return productMapper.updateProduct(product) > 0;
     }
 
+    @Override
+    public List<Product> findAllProductsByStatusAndHot() {
+        return productMapper.findAllProductsByStatusAndHot();
+    }
+
+    @Override
+    public List<Product> findProductsByStatusAndHotWithLimit(int limit) {
+        return productMapper.findProductsByStatusAndHotWithLimit(limit);
+    }
+
 }

@@ -25,4 +25,8 @@ public interface ProductService {
     Boolean deleteProduct(Integer id);
 
     Boolean updateProduct(Product product);
+
+    List<Product> findAllProductsByStatusAndHot();
+
+    List<Product> findProductsByStatusAndHotWithLimit(int limit);
 }

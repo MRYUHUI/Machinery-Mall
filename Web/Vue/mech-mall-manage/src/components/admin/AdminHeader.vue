@@ -1,35 +1,15 @@
-<!-- 导航栏部分 -->
-<template>
-  <div class="admin-header">
-    <h1 class="loge">机械<span>平台</span></h1>
-    <el-dropdown>
-      <div class="admin-button">
-        你好！管理员<el-icon class="el-icon--right"></el-icon>
-      </div>
-      <template #dropdown>
-        <el-dropdown-menu>
-          <el-dropdown-item class="custom-item" @click="editAdminInfo"
-            >编辑资料</el-dropdown-item
-          >
-          <el-dropdown-item class="custom-item" @click="goToLoginPage"
-            >退出登录</el-dropdown-item
-          >
-        </el-dropdown-menu>
-      </template>
-    </el-dropdown>
-  </div>
-</template>
-
 <script setup>
 import { useRouter } from 'vue-router';
 import { useStore } from 'vuex';
+import { SystemConsts } from '@/enums/SystemConsts';
+const projectName = SystemConsts.PROJECT_NAME
 const router = useRouter();
 const store = useStore()
-const goToLoginPage = () => {
-  // // 设置被激活的页面index = 1
-  // store.commit('setActivePageIndex', 1)
-  localStorage.removeItem('token')
-  router.replace({ path: '/' })
+const logout = () => {
+  localStorage.removeItem('token');
+  localStorage.removeItem('my-app-state');
+  store.commit('setIsLogin', false)
+  router.replace({ path: '/' });
 }
 const editAdminInfo = () => {
   const adminInfo = store.getters.curUserInfo
@@ -39,6 +19,27 @@ const editAdminInfo = () => {
   store.commit('setEditUserInfoDiaVisible', true)
 }
 </script>
+<template>
+  <div class="admin-header">
+    <h1 class="loge">{{ projectName }}</h1>
+    <el-dropdown>
+      <div class="admin-button">
+        你好！管理员<el-icon class="el-icon--right"></el-icon>
+      </div>
+      <template #dropdown>
+        <el-dropdown-menu>
+          <el-dropdown-item class="custom-item" @click="editAdminInfo"
+            >编辑资料</el-dropdown-item
+          >
+          <el-dropdown-item class="custom-item" @click="logout"
+            >退出登录</el-dropdown-item
+          >
+        </el-dropdown-menu>
+      </template>
+    </el-dropdown>
+  </div>
+</template>
+
 
 <style scoped>
 /* 管理后台导航内容 */
