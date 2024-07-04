@@ -1,7 +1,6 @@
 package com.mall.mechmall.mapper;
 
 import com.mall.mechmall.domain.ProductCategory;
-import com.mall.mechmall.domain.User;
 import org.apache.ibatis.annotations.*;
 import java.util.List;
 /**
@@ -12,8 +11,8 @@ import java.util.List;
 @Mapper
 public interface ProductCategoryMapper {
 
-    @Insert("INSERT INTO product_category (parent_id, name, status, created, updated) " +
-            "VALUES (#{parentId}, #{name}, #{status}, #{created}, #{updated})")
+    @Insert("INSERT INTO product_category (parent_id, name, sort_order, status, level, created, updated) " +
+            "VALUES (#{parentId}, #{name}, #{sortOrder}, #{status}, #{level}, NOW(), NOW())")
     public int insertProductCategory(ProductCategory productCategory);
 
     @Update({
@@ -32,11 +31,17 @@ public interface ProductCategoryMapper {
     })
     public int updateProductCategory(ProductCategory productCategory);
 
-    @Select("SELECT * FROM product_category WHERE parent_id = #{parentId}")
-    public List<ProductCategory> findProductCategoriesByParentId(@Param("parentId") int parentId);
+    @Update("UPDATE product_category SET sort_order = #{sortOrder} WHERE id = #{id}")
+    public int updateChildSortOrder(@Param("id") int id, @Param("sortOrder") int sortOrder);
+
+    @Select("SELECT * FROM product_category WHERE parent_id = #{id}")
+    public List<ProductCategory> findProductCategoriesByParentId(@Param("id") int id);
 
     @Select("SELECT * FROM product_category WHERE id = #{id}")
     public ProductCategory findProductCategoryById(@Param("id") int id);
+
+    @Select("SELECT * FROM product_category WHERE name = #{name}")
+    public ProductCategory findProductCategoryByName(@Param("name") String name);
 
     @Delete("DELETE FROM product_category WHERE id = #{id}")
     public boolean deleteProductCategory(@Param("id") int id);
@@ -44,38 +49,17 @@ public interface ProductCategoryMapper {
     @Select("SELECT id FROM product_category WHERE parent_id = #{parentId}")
     public List<Integer> findProductCategoryChildrenIds(@Param("parentId") int parentId);
 
-    @Select("SELECT * FROM product_category WHERE parent_id = #{parentId}")
-    public List<ProductCategory> findProductCategoryChildrens(@Param("parentId") int parentId);
-
-    @Delete("DELETE FROM product_category WHERE parent_id = #{parentId}")
-    public boolean deleteProductCategoryChildren(@Param("parentId") int parentId);
-
-    @Select("SELECT * FROM product_category WHERE parent_id = #{parentId} AND name = #{name}")
-    public ProductCategory findProductCategoryByParentIdAndName(@Param("parentId") int parentId, @Param("name") String name);
-
-    @Select("SELECT * FROM product_category LIMIT #{offset}, #{size}")
-    public List<ProductCategory> findAllProductCategorysPage(@Param("offset") int offset, @Param("size") int size);
+    @Select("SELECT * FROM product_category WHERE parent_id = #{parentId} LIMIT #{offset}, #{size}")
+    public List<ProductCategory> findProductCategoryChildrens(@Param("parentId") int parentId,@Param("offset") int offset, @Param("size") int size);
 
     @Select("SELECT * FROM product_category")
     public List<ProductCategory> findAllProductCategorys();
-
-    @Select("SELECT * FROM product_category WHERE status = 1 LIMIT #{offset}, #{size}")
-    public List<ProductCategory> findAllValidityProductCategorys(@Param("offset") int offset, @Param("size") int size);
-
-    @Select("SELECT * FROM product_category WHERE status = 0 LIMIT #{offset}, #{size}")
-    public List<ProductCategory> findAllInvalidityProductCategorys(@Param("offset") int offset, @Param("size") int size);
 
     @Select("SELECT * FROM product_category WHERE parent_id = 0 LIMIT #{offset}, #{size}")
     public List<ProductCategory> findAllHighestProductCategorys(@Param("offset") int offset, @Param("size") int size);
 
     @Select("SELECT COUNT(*) FROM product_category")
     public int countProductCategorys();
-
-    @Select("SELECT COUNT(*) FROM product_category WHERE status = 1")
-    public int countValidityProductCategorys();
-
-    @Select("SELECT COUNT(*) FROM product_category WHERE status = 0")
-    public int countInvalidityProductCategorys();
 
     @Select("SELECT COUNT(*) FROM product_category WHERE parent_id = #{parentId}")
     public int countProductCategoryChildrens(@Param("parentId") int parentId);
@@ -85,5 +69,28 @@ public interface ProductCategoryMapper {
 
     @Select("SELECT COUNT(*) FROM product_category WHERE id LIKE CONCAT('%', #{keyword}, '%') OR name LIKE CONCAT('%', #{keyword}, '%')")
     public int countProductCategoryByKeyword(String keyword);
+
+    // 2024.7.4
+    @Select("SELECT * FROM product_category WHERE parent_id = 0")
+    public List<ProductCategory> findAllHighestProductCategories();
+
+
+
+
+
+
+    /*以下是前台部分*/
+    @Select({
+            "WITH RECURSIVE category_ids AS (",
+            "    SELECT id FROM product_category WHERE parent_id = #{parentId}",
+            "    UNION ALL",
+            "    SELECT pc.id FROM product_category pc",
+            "    JOIN category_ids ct ON pc.parent_id = ct.id",
+            ")",
+            "SELECT id, parent_id, name, sort_order, status, level, created, updated",
+            "FROM product_category",
+            "WHERE id IN (SELECT id FROM category_ids)"
+    })
+    public List<ProductCategory> getProductCategories(@Param("parentId") Integer parentId);
 
 }

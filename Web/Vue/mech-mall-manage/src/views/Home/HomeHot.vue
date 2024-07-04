@@ -9,6 +9,7 @@ const hotList = ref([]);
 const displayGoodNum = 5
 const getAllHotCommodity = async () => {
   const { data: res } = await apiRequests.findAllHotCommodityLimit(displayGoodNum);
+
   hotList.value = res;
 };
 
@@ -37,12 +38,13 @@ const goToHotDetails = () => {
 <style scoped>
 .el-button {
   position: absolute;
-  right: 0;
-  margin: 10px 40px;
+  right: 10px;
+  margin: 10px 60px;
 }
 .home-hot {
   padding: 10px;
   background-color: #f0f0f0;
+  position: relative;
 }
 
 .goods-list {

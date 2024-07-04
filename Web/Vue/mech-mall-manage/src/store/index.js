@@ -5,6 +5,7 @@ import adminUser from "./adminUser";
 import product from "./product";
 import adminGoodType from "./adminGoodType";
 import adminOrder from "./adminOrder";
+import mallHome from "./MallHome";
 const store = createStore({
 	modules: {
 		user,
@@ -12,6 +13,7 @@ const store = createStore({
 		product,
 		adminGoodType,
 		adminOrder,
+		mallHome,
 	},
 	plugins: [
 		createPersistedState({

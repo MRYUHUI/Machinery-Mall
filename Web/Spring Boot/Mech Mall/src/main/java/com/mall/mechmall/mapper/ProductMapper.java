@@ -1,6 +1,7 @@
 package com.mall.mechmall.mapper;
 
 import com.mall.mechmall.domain.Product;
+import com.mall.mechmall.domain.ProductCategory;
 import org.apache.ibatis.annotations.*;
 
 import java.util.List;
@@ -55,6 +56,7 @@ public interface ProductMapper {
             "<if test='price != null'>price = #{price},</if>",
             "<if test='status != null'>status = #{status},</if>",
             "<if test='isHot != null'>is_hot = #{isHot},</if>",
+            "<if test='stock != null'>stock = #{stock},</if>",
             "<if test='updated != null'>updated = #{updated},</if>",
             "</set>",
             "WHERE id = #{id}",
@@ -62,9 +64,22 @@ public interface ProductMapper {
     })
     public int updateProduct(Product product);
 
+    @Update("UPDATE products SET icon_url = #{iconUrl} WHERE id = #{id}")
+    public int updateIconUrl(@Param("id") int id, @Param("iconUrl") String iconUrl);
+
     @Select("SELECT * FROM products WHERE status = 3 AND is_hot = 1")
     List<Product> findAllProductsByStatusAndHot();
 
+    @Select("SELECT * FROM product_category WHERE parent_id = #{id}")
+    public List<ProductCategory> findProductCategoriesByParentId(@Param("id")int id);
+
     @Select("SELECT * FROM products WHERE status = 3 AND is_hot = 1 LIMIT #{limit}")
     List<Product> findProductsByStatusAndHotWithLimit(@Param("limit") int limit);
+
+    @Select("SELECT * FROM products WHERE product_id = #{id} AND status = 3 LIMIT #{limit}")
+    List<Product> findProductsByProductIdLimit(@Param("limit") int limit, @Param("id") int id);
+
+    // 根据 partsId 查询商品
+    @Select("SELECT * FROM products WHERE parts_id = #{partsId} AND status = 3")
+    List<Product> findProductsByPartstId(@Param("partsId") int partsId);
 }

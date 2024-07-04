@@ -5,16 +5,18 @@ import adminOrderApi from './admin-order'
 import adminGoodsApi from './admin-goods'
 import adminGoodTypeApi from './admin-good-type'
 import commodityApi from './commodity'
+import userCartApi from './user-cart'
 
 const apiRequests = {
 	// 获取图片url
-	attachImageUrl: (url) => `${SystemConsts.BASE_URL}${url}`,
+	attachImageUrl: (url) => url ? `${SystemConsts.BASE_URL}${url}` : "",
 	...userApi,
 	...adminUserApi,
 	...adminGoodsApi,
 	...adminOrderApi,
 	...adminGoodTypeApi,
 	...commodityApi,
+	...userCartApi,
 }
 
 export default apiRequests;

@@ -29,17 +29,27 @@ const isLogin = computed(() => store.getters.isLogin);
 const goToLogin = () => {
   router.push({ name: 'login' });
 };
+const goToMyMallHome = () => {
+  router.push({ name: 'mall-home' });
+};
 
 const goToRegister = () => {
   router.push({ name: 'register' });
 };
+
+const goToHome = () => {
+  router.push({ name: 'user-home' });
+}
 </script>
 
 <template>
   <div class="user-header">
-    <h2 class="logo">{{ projectName }}</h2>
+    <h2 class="logo setPoint" @click="goToHome">{{ projectName }}</h2>
 
     <div class="hasLogin" v-if="isLogin">
+      <el-button class="mall-button" @click="goToMyMallHome"
+        >我的商城</el-button
+      >
       <el-dropdown>
         <div class="user-button">
           Hi, {{ username }}<el-icon class="el-icon--right"></el-icon>

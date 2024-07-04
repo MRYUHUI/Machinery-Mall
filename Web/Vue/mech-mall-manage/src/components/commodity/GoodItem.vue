@@ -1,17 +1,28 @@
 <script setup>
 import apiRequests from '@/apis';
 import { defineProps } from 'vue';
-
+import { useStore } from 'vuex';
+import { useRouter } from 'vue-router';
+const router = useRouter()
+const store = useStore()
 const props = defineProps({
   product: {
     type: Object,
     required: true
   }
 });
+
+const goToDetail = () => {
+  const curProduct = props.product
+  store.dispatch('updateSelectedProductInfo', curProduct)
+  router.push({ name: 'good-detail' })
+  // console.log(store.getters.selectedProductInfo);
+
+}
 </script>
 
 <template>
-  <el-card class="product-card setPoint">
+  <el-card class="product-card setPoint" @click="goToDetail">
     <el-image
       :src="apiRequests.attachImageUrl(product.iconUrl)"
       class="product-image"

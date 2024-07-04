@@ -1,8 +1,10 @@
 package com.mall.mechmall.service;
 
 import com.mall.mechmall.domain.Product;
+import org.apache.ibatis.annotations.Param;
 
 import java.util.List;
+import java.util.Map;
 
 /**
  * @Author: thh
@@ -29,4 +31,15 @@ public interface ProductService {
     List<Product> findAllProductsByStatusAndHot();
 
     List<Product> findProductsByStatusAndHotWithLimit(int limit);
+
+    public boolean updateIconUrl(int id, String iconUrl);
+
+    /**
+     * 查找相应顶级分类的商品
+     * @return 商品列表
+     */
+    public Map<String, List<Product>> findAllProductOrderByHighestCategoryLimit(int limit);
+
+    //
+    public List<Product> findProductsByPartstId(int partsId);
 }

@@ -11,11 +11,11 @@ const adminGoodTypeList = ref([]);
 const totaladminGoodTypes = ref(0);
 const columnWidth = '140px';
 const backbuttonDiaVisible = ref(false);
-const currentPage = ref(0);
+const currentPage = ref(1);
 const pageSize = ref(10);
 const deleteAdminGoodTypeDialogVisible = ref(false)
 // 搜索框内容绑定
-const searchQuery = ref(''); 
+const searchQuery = ref('');
 let curDelAdminGoodTypeId = -1
 
 // 获取全部顶级分类
@@ -44,10 +44,10 @@ const ReturnPreviousNode = async (row) => {
   try {
     let previousNodeParentList = store.getters.previousNodeParentList;
     // console.log(store.getters.previousNodeParentList);
-    const previousNodeParent = previousNodeParentList.pop(); 
+    const previousNodeParent = previousNodeParentList.pop();
     const res = await apiRequests.allProductCategoryChildrens(previousNodeParent);
-    if(previousNodeParent == 0 )  {
-      store.commit('newPreviousNodeParentList', [] );
+    if (previousNodeParent == 0) {
+      store.commit('newPreviousNodeParentList', []);
       backbuttonDiaVisible.value = false;
     }
     adminGoodTypeList.value = res.data;
@@ -61,7 +61,7 @@ const handleViewSubNodes = async (row) => {
   const res = await apiRequests.allProductCategoryChildrens(row.id);
   store.commit('setPreviousNodeParentList', row.parentId);
   // console.log(row.parentId);
-  if(row.parentId == 0){ backbuttonDiaVisible.value = true; }
+  if (row.parentId == 0) { backbuttonDiaVisible.value = true; }
 
   adminGoodTypeList.value = res.data;
   totaladminGoodTypes.value = res.total;
@@ -72,7 +72,7 @@ const handleDelete = (adminGoodType) => {
   deleteAdminGoodTypeDialogVisible.value = true
   curDelAdminGoodTypeId = adminGoodType.id
 }
- 
+
 // 删除分类动作
 const deleteAdminGoodTypeAction = async () => {
 
@@ -117,7 +117,7 @@ const handleSizeChange = (size) => {
 // 监控Switch开关
 const handleSwitchChange = async (row) => {
   try {
-    const res = await apiRequests.updateAdminGoodTypeInfo(row , row.parentId);
+    const res = await apiRequests.updateAdminGoodTypeInfo(row, row.parentId);
     if (res.success) {
       ElMessage.success('状态更新成功');
     } else {
@@ -140,6 +140,12 @@ watch(isAdminGoodTypeFresh, () => {
 
 // onMounted
 onMounted(() => {
+  console.log('======================');
+
+  console.log(currentPage.value);
+  console.log(pageSize.value);
+
+
   getAllHighestAdminGoodTypesPage(currentPage.value, pageSize.value);
 });
 </script>
@@ -158,11 +164,24 @@ onMounted(() => {
         <el-button type="primary" @click="handleSearch">搜索</el-button>
       </div>
       <div class="add-bar">
-        <el-button class="add-button" type="primary" size="medium" @click="ReturnPreviousNode(row)">增加</el-button>
+        <el-button
+          class="add-button"
+          type="primary"
+          size="medium"
+          @click="ReturnPreviousNode(row)"
+          >增加</el-button
+        >
       </div>
       <div class="space-div"></div>
       <div class="back-bar">
-        <el-button v-if="backbuttonDiaVisible" class="back-button" type="primary" size="medium" @click="ReturnPreviousNode(row)">返回上节点</el-button>
+        <el-button
+          v-if="backbuttonDiaVisible"
+          class="back-button"
+          type="primary"
+          size="medium"
+          @click="ReturnPreviousNode(row)"
+          >返回上节点</el-button
+        >
       </div>
     </div>
 
@@ -201,16 +220,9 @@ onMounted(() => {
         label="类别名称"
         align="center"
       />
-      <el-table-column
-        label="状态"
-        :width="columnWidth"
-        align="center"
-      >
+      <el-table-column label="状态" :width="columnWidth" align="center">
         <template #default="{ row }">
-          <el-switch
-            v-model="row.status"
-            @change="handleSwitchChange(row)"
-          />
+          <el-switch v-model="row.status" @change="handleSwitchChange(row)" />
         </template>
       </el-table-column>
       <el-table-column
@@ -222,9 +234,18 @@ onMounted(() => {
       <el-table-column label="操作" :width="260" align="center">
         <template #default="{ row }">
           <div class="action-buttons">
-            <el-button type="primary" size="mini" @click="handleEdit(row)">编辑</el-button>
-            <el-button type="danger" size="mini" @click="handleDelete(row)">删除</el-button>
-            <el-button type="success" size="mini" @click="handleViewSubNodes(row)">查看子节点</el-button>
+            <el-button type="primary" size="mini" @click="handleEdit(row)"
+              >编辑</el-button
+            >
+            <el-button type="danger" size="mini" @click="handleDelete(row)"
+              >删除</el-button
+            >
+            <el-button
+              type="success"
+              size="mini"
+              @click="handleViewSubNodes(row)"
+              >查看子节点</el-button
+            >
           </div>
         </template>
       </el-table-column>
@@ -257,12 +278,16 @@ onMounted(() => {
       </span>
       <template #footer>
         <div class="dialog-footer">
-          <el-button @click="deleteAdminGoodTypeDialogVisible = false">取消</el-button>
-          <el-button type="primary" @click="deleteAdminGoodTypeAction">确定</el-button>
+          <el-button @click="deleteAdminGoodTypeDialogVisible = false"
+            >取消</el-button
+          >
+          <el-button type="primary" @click="deleteAdminGoodTypeAction"
+            >确定</el-button
+          >
         </div>
       </template>
     </el-dialog>
-    
+
     <EditAdminGoodTypeInfo></EditAdminGoodTypeInfo>
   </div>
 </template>

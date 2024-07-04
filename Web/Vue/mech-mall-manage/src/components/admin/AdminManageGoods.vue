@@ -265,8 +265,8 @@ function beforeImgUpload (file) {
         <template v-slot="{ row }">
           <el-switch
             v-model="row.isHot"
-            active-text="一般"
-            inactive-text="热销"
+            active-text="热销"
+            inactive-text="一般"
             :active-value="1"
             :inactive-value="2"
             @change="handleIsHotChange(row)"
@@ -381,6 +381,6 @@ function beforeImgUpload (file) {
   padding: 0 5px;
   height: 30px;
   width: 80px;
-	overflow: hidden;
+  overflow: hidden;
 }
 </style>

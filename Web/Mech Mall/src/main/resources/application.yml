@@ -1,0 +1,32 @@
+server:
+#  设置基地址为 http://localhost:8080/actionmall
+  port: 8080
+  servlet:
+    context-path: /actionmall
+spring:
+  datasource:
+    url: jdbc:mysql://127.0.0.1:3306/mechmall?useSSL=false&useUnicode=true&characterEncoding=UTF-8&serverTimezone=UTC&allowPublicKeyRetrieval=true
+    username: root
+    password: yh020316
+    driverClassName: com.mysql.cj.jdbc.Driver
+    type: com.alibaba.druid.pool.DruidDataSource
+  jackson:
+    date-format: yyyy-MM-dd HH:mm:ss
+  servlet:
+    multipart:
+      max-file-size: 120MB
+      max-request-size: 120MB
+mybatis-plus:
+  configuration:
+    log-impl: org.apache.ibatis.logging.stdout.StdOutImpl
+
+mybatis:
+  type-aliases-package: com.mall.mechmall.domain
+  mapper-locations: classpath:mapper/*.xml
+
+jwt:
+  secret: mechmall_secret_key
+  expiration: 86400000 # JWT过期时间，单位毫秒（这里设置为1天）
+  header: Authorization
+  prefix: Bearer
+

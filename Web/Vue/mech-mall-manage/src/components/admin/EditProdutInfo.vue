@@ -1,40 +1,41 @@
 <script setup>
 import { useStore } from "vuex";
-import { computed, ref, reactive, watch } from "vue";
+import { computed, ref, reactive, watch, onMounted } from "vue";
 import apiRequests from "@/apis";
 import { ElMessage } from "element-plus";
 
+const productCategories = ref([]);
 const store = useStore();
-const editRef = ref(null) ;
+const editRef = ref(null);
 
 const form = reactive({
   id: '',
-	name: '',
-	productId: '',
-	partsId: '',
-	iconUrl: '',
-	sunImages: '',
-	specParam: '',
-	price: '',
-	stock: '',
-	status: '',
-	isHot: '',
-	created: '',
+  name: '',
+  productId: '',
+  partsId: '',
+  iconUrl: '',
+  sunImages: '',
+  specParam: '',
+  price: '',
+  stock: '',
+  status: '',
+  isHot: '',
+  created: '',
   updated: '',
 });
-const resetForm = () =>{
+const resetForm = () => {
   form.id = '';
-	form.name = '';
-	form.productId = '';
-	form.partsId = '';
-	form.iconUrl = '';
-	form.sunImages =  '';
-	form.specParam =  '';
-	form.price =  '';
-	form.stock =  '';
-	form.status =  '';
-	form.isHot =  '';
-	form.created =  '';
+  form.name = '';
+  form.productId = '';
+  form.partsId = '';
+  form.iconUrl = '';
+  form.sunImages = '';
+  form.specParam = '';
+  form.price = '';
+  form.stock = '';
+  form.status = '';
+  form.isHot = '';
+  form.created = '';
   form.updated = '';
 };
 const editRule = {
@@ -84,14 +85,25 @@ const ProductInfo = computed(() => store.getters.selectedProductInfo);
 watch(ProductInfo, (newProductInfo) => {
   Object.assign(form, newProductInfo);
 });
-
+const fetchProductCategories = async () => {
+  try {
+    const response = await apiRequests.fetchProductCategory(0);
+    productCategories.value = response.data;
+    console.log(productCategories);
+  } catch (error) {
+    console.error('Failed to fetch product categories:', error);
+  }
+}
+onMounted(() => {
+  fetchProductCategories();
+})
 
 
 </script>
 
 <template>
- <!-- 对话框 -->
- <el-dialog
+  <!-- 对话框 -->
+  <el-dialog
     v-model="editProductInfoDiaVisible"
     title="编辑产品信息"
     :close-on-click-modal="false"
@@ -112,7 +124,14 @@ watch(ProductInfo, (newProductInfo) => {
       </el-form-item>
       <!-- 产品类型 -->
       <el-form-item label="产品类型" prop="productId">
-        <el-input v-model="form.productId" />
+        <el-select v-model="form.productId" placeholder="请选择产品类型">
+          <el-option
+            v-for="item in productCategories"
+            :key="item.id"
+            :label="item.name"
+            :value="item.id"
+          />
+        </el-select>
       </el-form-item>
       <!-- 配件类型 -->
       <el-form-item label="配件类型" prop="partsId">
@@ -140,9 +159,6 @@ watch(ProductInfo, (newProductInfo) => {
       <el-button class="btn-list" @click="cancelEidt">取消</el-button>
     </div>
   </el-dialog>
-
-
-
 </template>
 
 <style>
@@ -153,5 +169,4 @@ watch(ProductInfo, (newProductInfo) => {
   width: 100px;
   margin: 10px;
 }
-
 </style>

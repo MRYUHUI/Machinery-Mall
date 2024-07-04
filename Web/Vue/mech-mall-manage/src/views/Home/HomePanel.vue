@@ -33,6 +33,7 @@ const props = defineProps({
 <style scoped>
 .home-panel {
   background-color: #fffbfb;
+  padding: 0 20px;
 }
 
 .home-panel .head {

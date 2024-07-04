@@ -5,12 +5,17 @@ const routes = [
 		path: '/',
 		name: 'layout',
 		component: () => import('@/views/Layout.vue'),
+		redirect: { name: 'user-home' },
 		children: [
 			{
 				// 前台界面
 				path: '/',
 				name: 'user-home',
 				component: () => import('@/views/UserHome.vue'),
+				redirect: { name: 'font-page' },
+				meta: {
+					breadcrumb: '首页'
+				},
 				children: [
 					{
 						// 前台的首页
@@ -22,7 +27,55 @@ const routes = [
 						// 热门商品详情
 						path: '/hot-detail',
 						name: 'hot-detail',
-						component: () => import('@/views/Home/DisplayHotGoods.vue')
+						component: () => import('@/views/Home/DisplayHotGoods.vue'),
+						meta: {
+							breadcrumb: '热销商品'
+						},
+					},
+					{
+						// 商品详情
+						path: '/good/detail',
+						name: 'good-detail',
+						component: () => import('@/views/Commodity/GoodDetail.vue'),
+						meta: {
+							breadcrumb: '商品详情'
+						},
+					},
+					{
+						// 分类商品详情
+						path: '/category/good/detail',
+						name: 'category-good-detail',
+						component: () => import('@/views/Commodity/GoodOrderByCategory.vue'),
+						meta: {
+							breadcrumb: '分类详情'
+						},
+					},
+					{
+						// 我的商城
+						path: '/mall-home',
+						name: 'mall-home',
+						component: () => import('@/views/MyMallHome.vue'),
+						redirect: { name: 'order-user' },  // 添加默认重定向
+						children: [
+							{
+								// 我的订单
+								path: '/order-user',
+								name: 'order-user',
+								component: () => import('@/components/user/UserOrder.vue')
+							},
+							{
+								// 我的购物车
+								path: '/cart-user',
+								name: 'cart-user',
+								component: () => import('@/components/user/UserCart.vue')
+							},
+							{
+								// 收货地址管理
+								path: '/address-user',
+								name: 'address-user',
+								component: () => import('@/components/user/UserAddress.vue')
+							},
+						]
 					},
 				]
 			},

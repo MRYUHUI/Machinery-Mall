@@ -1,7 +1,7 @@
 export default {
 	state: {
 		adminGoodTypeId: "", // 分类ID
-		adminGoodTypeName: "", // 分类名
+		adminGoodTypeParentId:"", // 父节点ID
 		previousNodeParentList: [],
 		selectedAdminGoodTypeInfo: { // 被选中的分类信息
 			id: '',
@@ -14,22 +14,24 @@ export default {
 			updated: ''
 		},
 		editAdminGoodTypeInfoDiaVisible: false, // 是否显示编辑分类信息对话框
+		addAdminGoodTypeInfoDiaVisible: false, // 是否显示添加分类信息对话框
 		isAdminGoodTypeFresh: false, // 管理分类信息是否要刷新
 	},
 	getters: {
 		adminGoodTypeId: (state) => state.adminGoodTypeId,
-		adminGoodTypeName: (state) => state.adminGoodTypeName,
+		adminGoodTypeParentId: (state) => state.adminGoodTypeParentId,
 		previousNodeParentList: (state) => state.previousNodeParentList,
 		selectedAdminGoodTypeInfo: (state) => state.selectedAdminGoodTypeInfo,
 		editAdminGoodTypeInfoDiaVisible: (state) => state.editAdminGoodTypeInfoDiaVisible,
+		addAdminGoodTypeInfoDiaVisible: (state) => state.addAdminGoodTypeInfoDiaVisible,
 		isAdminGoodTypeFresh: (state) => state.isAdminGoodTypeFresh,
 	},
 	mutations: {
 		setAdminGoodTypeId: (state, adminGoodTypeId) => {
 			state.adminGoodTypeId = adminGoodTypeId;
 		},
-		setAdminGoodTypeName: (state, adminGoodTypeName) => {
-			state.adminGoodTypeName = adminGoodTypeName;
+		setAdminGoodTypeParentId: (state, adminGoodTypeParentId) => {
+			state.adminGoodTypeParentId = adminGoodTypeParentId;
 		},
 		setPreviousNodeParentList: (state, parentId) => {
 			state.previousNodeParentList.push(parentId);
@@ -41,9 +43,17 @@ export default {
 		updateSelectedAdminGoodTypeInfo: (state, selectedAdminGoodTypeInfo) => {
 			state.selectedAdminGoodTypeInfo = selectedAdminGoodTypeInfo;
 		},
+		// 更新 adminGoodTypeLevel 
+		updateAdminGoodTypeParentId (state, adminGoodTypeParentId) {
+			state.adminGoodTypeParentId = adminGoodTypeParentId;
+		},
 		setEditAdminGoodTypeInfoDiaVisible: (state, editAdminGoodTypeInfoDiaVisible) => {
 			state.editAdminGoodTypeInfoDiaVisible = editAdminGoodTypeInfoDiaVisible
 			// console.log('js editAdminGoodTypeInfoDiaVisible = ' + editAdminGoodTypeInfoDiaVisible)
+		},
+		setAddAdminGoodTypeInfoDiaVisible: (state, addAdminGoodTypeInfoDiaVisible) => {
+			state.addAdminGoodTypeInfoDiaVisible = addAdminGoodTypeInfoDiaVisible
+			// console.log('js addAdminGoodTypeInfoDiaVisible = ' + addAdminGoodTypeInfoDiaVisible)
 		},
 		setIsAdminGoodTypeFresh: (state, isAdminGoodTypeFresh) => {
 			state.isAdminGoodTypeFresh = isAdminGoodTypeFresh
@@ -53,6 +63,10 @@ export default {
         // 更新整个 selectedAdminGoodTypeInfo 
 		updateSelectedAdminGoodTypeInfo ({ commit }, selectedAdminGoodTypeInfo) {
 			commit('updateSelectedAdminGoodTypeInfo', selectedAdminGoodTypeInfo);
+		},
+        // 更新 adminGoodTypeLevel 
+		updateAdminGoodTypeParentId ({ commit }, adminGoodTypeParentId) {
+			commit('updateAdminGoodTypeParentId', adminGoodTypeParentId);
 		}
 	}
 };
