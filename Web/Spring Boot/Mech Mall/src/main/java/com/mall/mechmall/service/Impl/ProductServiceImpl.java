@@ -99,6 +99,7 @@ public class ProductServiceImpl implements ProductService {
     public boolean updateIconUrl(int id, String iconUrl) {
         return productMapper.updateIconUrl(id, iconUrl) > 0;
     }
+
     /**
      * 查找相应顶级分类的商品
      * @return 商品列表
@@ -117,10 +118,19 @@ public class ProductServiceImpl implements ProductService {
         }
         return allProductsOrderByCategory;
     }
-
     @Override
     public List<Product> findProductsByPartstId(int partsId) {
         return productMapper.findProductsByPartstId(partsId);
+    }
+
+    @Override
+    public List<Product> findProductsByProductIdLimit(int limit, int productId) {
+        return productMapper.findProductsByProductIdLimit(limit, productId);
+    }
+
+    @Override
+    public List<Product> findProductsByProductId(int id) {
+        return productMapper.findProductsByProductId(id);
     }
 
 }

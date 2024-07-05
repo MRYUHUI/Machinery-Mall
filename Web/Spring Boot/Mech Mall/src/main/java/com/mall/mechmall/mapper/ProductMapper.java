@@ -82,4 +82,7 @@ public interface ProductMapper {
     // 根据 partsId 查询商品
     @Select("SELECT * FROM products WHERE parts_id = #{partsId} AND status = 3")
     List<Product> findProductsByPartstId(@Param("partsId") int partsId);
+
+    @Select("SELECT * FROM products WHERE product_id = #{id} AND status = 3")
+    List<Product> findProductsByProductId(@Param("id") int id);
 }

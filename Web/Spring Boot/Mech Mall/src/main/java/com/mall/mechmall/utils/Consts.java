@@ -31,13 +31,25 @@ public class Consts {
 
     public static final String TOKEN = "token";
 
+
     public static Boolean deleteFile(String path) {
+        // 构建完整的文件路径，替换路径中的分隔符
         String filePath = System.getProperty("user.dir") + path;
         File file = new File(filePath);
+
+        // 输出调试信息，确保路径正确
+        System.out.println("Trying to delete file at path: " + filePath);
+
+        // 检查文件是否存在
         if (!file.exists()) {
+            System.out.println("File does not exist: " + filePath);
             return true; // 文件不存在，直接返回true
         }
-        return FileSystemUtils.deleteRecursively(new File(filePath));
+
+        // 尝试删除文件或目录
+        boolean result = FileSystemUtils.deleteRecursively(file);
+        System.out.println("Deletion result: " + result);
+        return result;
     }
 
     public static JSONObject getJson(String msg, boolean tag) {

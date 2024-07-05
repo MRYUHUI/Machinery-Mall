@@ -54,7 +54,6 @@ const onSubmit = () => {
   editRef.value.validate(async (valid) => {
     if (valid) {
       const res = await apiRequests.saveProduct(form)
-      console.log(form)
       if (res.success) {
         const updatedProductInfo = res.data
         // 调用 store 的 action 保存数据
@@ -89,7 +88,7 @@ const fetchProductCategories = async () => {
   try {
     const response = await apiRequests.fetchProductCategory(0);
     productCategories.value = response.data;
-    console.log(productCategories);
+
   } catch (error) {
     console.error('Failed to fetch product categories:', error);
   }

@@ -137,7 +137,9 @@ public class AdminProductsController {
         File dest = new File(filePath + System.getProperty("file.separator") + fileName);
         String storeImgPath = "/static/img/goods/" + fileName;
         System.out.println("storeImgPath " + storeImgPath);
-
+        // 删除商品原来的图片
+        if (!deleteFile(productService.findProductById(id).getIconUrl()))
+            return getJson("文件删除失败", false);
         try {
             ImgSrc.transferTo(dest);
         } catch (IOException e) {

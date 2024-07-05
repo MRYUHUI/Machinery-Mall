@@ -127,8 +127,17 @@ const goToHome = () => {
 .logo {
   margin-left: 20px;
   margin-right: auto;
+  transition: all 0.2s;
+  border-radius: 10px;
 }
-
+.logo:hover {
+  transform: scale(1.2);
+  box-shadow: 0 0 10px #000000da;
+  background-color: #3333333e;
+}
+.logo:active {
+  transform: scale(0.8);
+}
 .notLogin {
   margin-right: 50px;
 }

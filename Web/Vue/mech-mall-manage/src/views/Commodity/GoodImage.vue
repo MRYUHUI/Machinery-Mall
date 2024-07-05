@@ -31,10 +31,6 @@ watch([elementX, elementY], () => {
   }
 });
 
-onMounted(() => {
-  console.log(apiRequests.attachImageUrl(curProduct.value.iconUrl));
-
-})
 </script>
 
 <template>

@@ -26,7 +26,7 @@ const searchQuery = ref('')
 //获取所有产品
 const getAllProduct = async (page = 1, size = 10) => {
   const res = await apiRequests.getAllProduct(page, size)
-  console.log(res.data)
+
   productList.value = res.data
   totalProduct.value = res.total
 }

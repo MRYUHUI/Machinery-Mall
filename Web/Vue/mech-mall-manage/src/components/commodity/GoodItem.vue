@@ -16,7 +16,6 @@ const goToDetail = () => {
   const curProduct = props.product
   store.dispatch('updateSelectedProductInfo', curProduct)
   router.push({ name: 'good-detail' })
-  // console.log(store.getters.selectedProductInfo);
 
 }
 </script>

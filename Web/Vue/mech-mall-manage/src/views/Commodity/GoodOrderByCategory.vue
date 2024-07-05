@@ -42,31 +42,53 @@ const findAllChildCateByParentId = async (parentId, level) => {
 // 初始化获取所有分类
 const fetchInitialCategories = async () => {
   await findAllChildCateByParentId(0, 1); // 获取所有一级分类
-  await findAllProductsByThirdCategory(thirdNode.value)
+  await findAllProductsByThirdCategory()
 };
 
-// 切换三级分类
+// 点击 三级分类按钮
 const changeThirdNode = async (id) => {
+  // 如果点击的分类与当前激活的相同，取消激活，显示所有商品
+  if (id === thirdNode.value) {
+    store.commit('setThirdLevelNode', -1)
+    await findAllProductsByThirdCategory()
+    return
+  }
   store.commit('setThirdLevelNode', id)
-  await findAllProductsByThirdCategory(id)
+  await findAllProductsByThirdCategory()
 };
-// 切换一级分类
-const changeRootNode = (id) => {
+// 切换 一级分类
+const changeRootNode = async (id) => {
+  // 更新 二级分类
   findAllChildCateByParentId(id, 2)
+  // 更新一级分类
   store.commit('setRootNode', id)
-
+  // 设置显示全部商品
+  store.commit('setThirdLevelNode', -1)
+  // 显示全部商品
+  await findAllProductsByThirdCategory()
 }
 
 // 根据三级分类获取所有的商品
-const findAllProductsByThirdCategory = async (id) => {
-  const { data: res } = await apiRequests.findAllProductsByPartsId(id)
-  displayGoodList.value = res
+const findAllProductsByThirdCategory = async () => {
+  const thirdId = thirdNode.value
+  let res;
+  // 如果存在三级分类的 id
+  if (thirdId != -1) {
+    res = await apiRequests.findAllProductsByPartsId(thirdId)
+    displayGoodList.value = res.data
+  }
+  else {
+    // 不存在三级分类就获取一级分类下的所有商品
+    res = await apiRequests.findProductsByProductId(rootNode.value)
+    displayGoodList.value = res.data
+  }
+
 }
 // computed =============================================
 // 计算属性保留，获取当前应激活的分类信息
 const rootNode = computed(() => store.getters.rootNode); // 计算一级分类
-const secondNode = computed(() => store.getters.secondLevelNode); // 计算二级分类
 const thirdNode = computed(() => store.getters.thirdLevelNode); // 计算三级分类
+
 
 // 组件挂载时调用初始化函数
 onMounted(() => fetchInitialCategories());

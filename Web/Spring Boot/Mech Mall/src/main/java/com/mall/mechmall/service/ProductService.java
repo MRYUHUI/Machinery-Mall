@@ -13,9 +13,13 @@ import java.util.Map;
  */
 public interface ProductService {
     List<Product> findAllProduct(int page, int size);
+
     int countProduct();
+
     Product findProductById(Integer id);
+
     List<Product> searchProduct(String keyword, int page, int size);
+
     int countProductByKeyword(String keyword);
 
     Boolean insertProduct(Product product);
@@ -40,6 +44,10 @@ public interface ProductService {
      */
     public Map<String, List<Product>> findAllProductOrderByHighestCategoryLimit(int limit);
 
-    //
+    // 根据 partsId获取商品列表
     public List<Product> findProductsByPartstId(int partsId);
+
+    public List<Product> findProductsByProductIdLimit(int limit, int productId);
+
+    List<Product> findProductsByProductId(int id);
 }

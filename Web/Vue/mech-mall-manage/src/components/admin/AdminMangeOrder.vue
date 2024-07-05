@@ -33,7 +33,7 @@ const searchOrders = async (query, page = 1, size = 10) => {
     return;
   }
   const res = await apiRequests.searchOrders(query, page, size);
-  console.log(res);
+
 
   userList.value = res.data;
   totalUsers.value = res.total;

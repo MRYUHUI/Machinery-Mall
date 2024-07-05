@@ -3,7 +3,7 @@ export default {
 		// 展示的页面index值（我的订单、我的购物车、收货地址管理），默认用户管理
 		activeMyMallHomeIndex: 1,
 		secondLevelNode: 4,
-		thirdLevelNode: 7,
+		thirdLevelNode: -1,
 		rootNode: 1
 	},
 	getters: {

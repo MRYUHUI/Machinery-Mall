@@ -9,7 +9,6 @@ const productListOrderByCategory = ref([]);
 const displayGoodNum = 5
 const findAllProductOrderByHighestCategory = async () => {
   const { data: res } = await apiRequests.findAllProductOrderByHighestCategory(displayGoodNum);
-  console.log(res);
 
   productListOrderByCategory.value = res;
 };
@@ -24,7 +23,7 @@ const goToHotDetails = () => {
 </script>
 
 <template>
-  <div class="home-hot">
+  <div class="home-category">
     <!-- <el-button @click="goToHotDetails">更多</el-button> -->
 
     <div
@@ -45,15 +44,12 @@ const goToHotDetails = () => {
 
 
 <style scoped>
-/* .category-section {
-  padding: 0 20px;
-} */
 .el-button {
   position: absolute;
   right: 10px;
   margin: 10px 60px;
 }
-.home-hot {
+.home-category {
   padding: 10px;
 
   background-color: #f0f0f0;

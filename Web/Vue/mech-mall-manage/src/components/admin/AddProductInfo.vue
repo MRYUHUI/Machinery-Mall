@@ -76,7 +76,7 @@ const fetchProductCategories = async () => {
   try {
     const response = await apiRequests.fetchProductCategory(0);
     productCategories.value = response.data;
-    console.log(productCategories);
+
   } catch (error) {
     console.error('Failed to fetch product categories:', error);
   }

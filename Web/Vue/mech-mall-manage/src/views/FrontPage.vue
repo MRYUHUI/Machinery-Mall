@@ -2,6 +2,8 @@
 import HomeCategoryVue from './Home/HomeCategory.vue'
 import HomeHot from './Home/HomeHot.vue'
 import { useRouter } from 'vue-router'
+import MainComponent from '@/components/MainComponent.vue'
+import Carousel from './Home/Carousel.vue'
 const router = useRouter()
 const goToCP = () => {
   router.push({ name: 'category-good-detail' })
@@ -10,7 +12,8 @@ const goToCP = () => {
 
 <template>
   <div class="front-page">
-    <el-button @click="goToCP">go</el-button>
+    <MainComponent></MainComponent>
+    <Carousel></Carousel>
     <HomeHot></HomeHot>
     <HomeCategoryVue></HomeCategoryVue>
   </div>

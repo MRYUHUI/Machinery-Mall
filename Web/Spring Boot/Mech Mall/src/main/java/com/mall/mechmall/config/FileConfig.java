@@ -11,9 +11,10 @@ import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
  */
 @Configuration
 public class FileConfig implements WebMvcConfigurer {
-    //    商品图片地址
+
     @Override
     public void addResourceHandlers(ResourceHandlerRegistry registry) {
+        //    商品图片地址
         registry.addResourceHandler("/static/img/goods/**")
                 .addResourceLocations("file:" + System.getProperty("user.dir") + System.getProperty("file.separator") + "src"
                         + System.getProperty("file.separator") + "main"
@@ -21,6 +22,16 @@ public class FileConfig implements WebMvcConfigurer {
                         + System.getProperty("file.separator") + "static"
                         + System.getProperty("file.separator") + "img"
                         + System.getProperty("file.separator") + "goods"
+                        + System.getProperty("file.separator")
+                );
+        // 轮播图地址
+        registry.addResourceHandler("/static/img/carousel/**")
+                .addResourceLocations("file:" + System.getProperty("user.dir") + System.getProperty("file.separator") + "src"
+                        + System.getProperty("file.separator") + "main"
+                        + System.getProperty("file.separator") + "resources"
+                        + System.getProperty("file.separator") + "static"
+                        + System.getProperty("file.separator") + "img"
+                        + System.getProperty("file.separator") + "carousel"
                         + System.getProperty("file.separator")
                 );
     }
