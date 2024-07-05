@@ -14,7 +14,7 @@ const commodityApi = {
 	// 根据 ProductId 获取商品
 	findProductsByProductId: (id) => httpInstance.get('/commodity/home/product/highest/category/single', { params: { id } }),
 	// 获取轮播图
-	findAllCarousel: () => httpInstance.get('/carousel')
+	findAllCarousel: () => httpInstance.get('/carousel/all')
 
 };
 export default commodityApi;

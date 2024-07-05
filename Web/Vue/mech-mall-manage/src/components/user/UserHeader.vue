@@ -131,9 +131,10 @@ const goToHome = () => {
   border-radius: 10px;
 }
 .logo:hover {
-  transform: scale(1.2);
+  transform: scale(1.1);
   box-shadow: 0 0 10px #000000da;
-  background-color: #3333333e;
+  background-color: #5f5f5f;
+  color: #f8f9fa;
 }
 .logo:active {
   transform: scale(0.8);

@@ -72,12 +72,13 @@ onMounted(async () => {
 
 <style scoped>
 .custom-menu {
-  width: 60%;
+  width: 100%;
   background-color: #ffffff;
   border-radius: 8px;
   display: flex;
   justify-content: space-around;
   box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+  border-bottom: 1px solid rgba(0, 0, 0, 0.212);
 }
 
 .el-menu-item,

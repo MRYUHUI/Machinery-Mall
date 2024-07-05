@@ -17,22 +17,29 @@ import java.util.List;
  * @Description:
  */
 @Service
-  public class OrderServiceImpl implements OrderService {
+public class OrderServiceImpl implements OrderService {
 
     @Autowired
-    private  OrderMapper orderMapper;
+    private OrderMapper orderMapper;
 
     public OrderServiceImpl(OrderMapper orderMapper) {
         this.orderMapper = orderMapper;
     }
 
+    //thh增加
     @Override
-    public Order findOrderByOrderNo(Integer order_no) {
+    public List<Order> getOrderByUserId(int uid) {
+        return orderMapper.getOrderByUserId(uid);
+    }
+
+
+    @Override
+    public Order findOrderByOrderNo(String order_no) {
         return orderMapper.findOrderByOrderNo(order_no);
     }
 
     @Override
-    public Boolean checkOrderByOrderNo(Integer order_no) {
+    public Boolean checkOrderByOrderNo(String order_no) {
         return orderMapper.checkOrderByOrderNo(order_no) > 0;
     }
 
@@ -47,32 +54,32 @@ import java.util.List;
     }
 
     @Override
-    public Boolean insertOrder(Order order) {
+    public boolean insertOrder(Order order) {
         return orderMapper.insertOrder(order) > 0;
     }
 
     @Override
-    public BigDecimal findOrderAmount(Integer order_no) {
+    public BigDecimal findOrderAmount(String order_no) {
         return orderMapper.findOrderAmount(order_no);
     }
 
     @Override
-    public Boolean checkOrderAmount(Integer order_no, BigDecimal amount) {
+    public Boolean checkOrderAmount(String order_no, BigDecimal amount) {
         return orderMapper.checkOrderAmount(order_no, amount) > 0;
     }
 
     @Override
-    public Boolean updateOrderType(Integer order_no, Integer type) {
+    public Boolean updateOrderType(String order_no, Integer type) {
         return orderMapper.updateOrderType(order_no, type) > 0;
     }
 
     @Override
-    public Integer findOrderFreight(Integer order_no) {
+    public Integer findOrderFreight(String order_no) {
         return null;
     }
 
     @Override
-    public Boolean updateOrderStatus(Integer order_no, Integer status) {
+    public Boolean updateOrderStatus(String order_no, Integer status) {
         return orderMapper.updateOrderStatus(order_no, status) > 0;
     }
 
@@ -87,24 +94,13 @@ import java.util.List;
         return orderMapper.countOrders();
     }
 
-//    @Override
-//    public Boolean deleteOrder(Integer order_no) {
-//        return orderMapper.deleteOrder(order_no) > 0;
-//    }
-
-    @Transactional
     @Override
-        public Boolean deleteOrder(Integer orderNo) {
-            int result = orderMapper.deleteOrder(orderNo);
-            return result > 0;
+    public boolean deleteOrder(Integer orderId) {
+        return orderMapper.deleteOrder(orderId) > 0;
     }
 
-
-
-
-
     @Override
-    public Order findOrderById(Integer id) {
+    public Order findOrderById(int id) {
         return orderMapper.findOrderById(id);
     }
 

@@ -64,6 +64,8 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                 .antMatchers("/static/img/goods/**").permitAll()
                 .antMatchers("/commodity/**").permitAll()
                 .antMatchers("/static/img/carousel/**").permitAll()
+                .antMatchers("/alipay/**").permitAll()
+                .antMatchers("/carousel/**").permitAll()
 
                 // 允许所有人访问 OPTIONS 请求（为了支持跨域请求的预检请求）
                 .antMatchers(HttpMethod.OPTIONS, "/**").permitAll()

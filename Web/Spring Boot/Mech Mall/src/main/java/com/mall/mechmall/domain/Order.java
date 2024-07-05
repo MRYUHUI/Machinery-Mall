@@ -31,25 +31,18 @@ import java.util.concurrent.atomic.LongAdder;
 @NoArgsConstructor
 @TableName("orders")
 public class Order {
-//    private Long id;
-//    private Integer order_no;
-//    private Integer uid;
-//    private Integer addrId;
-//    private BigDecimal amount;
-//    private Integer type;
-//    private BigDecimal freight;
-//    private Integer status;
+
     @TableId(value = "id")
     private Integer id;
 
     @TableField(value = "order_no")
-    private Integer orderNo; // bigint对应Long
+    private String orderNo; // bigint对应Long
 
     @TableField(value = "uid")
-    private long uid; // int对应Integer
+    private Integer uid; // int对应Integer
 
     @TableField(value = "addr_id")
-    private double addrId; // int对应Integer
+    private Integer addrId; // int对应Integer
 
     @TableField(value = "amount")
     private double amount; // decimal对应BigDecimal
@@ -58,18 +51,18 @@ public class Order {
     private Integer type; // int对应Integer
 
     @TableField(value = "freight")
-    public double freight; // int对应Integer
+    public Integer freight; // int对应Integer
 
     @TableField(value = "status")
     private Integer status; // int对应Integer
 
     @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss")
-    @TableField(value = "create_time")
-    private Date createTime;
+    @TableField(value = "created")
+    private Date created;
 
     @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss")
-    @TableField(value = "update_time")
-    private Date updateTime;
+    @TableField(value = "updated")
+    private Date updated;
 
 
     @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss")
@@ -88,38 +81,4 @@ public class Order {
     @TableField(value = "close_time")
     private Date closeTime; // datetime对应Date
 
-
-
-
-        // 其他属性和方法
-
-
-
-///////////
-
-//    @TableField(value = "asw")
-//    private String asw;
-//
-//    @TableField(value = "role")
-//    private Integer role;
-//
-//    @TableField(value = "age")
-//    private Integer age;
-//
-//    @TableField(value = "sex")
-//    private Integer sex;
-//
-//    @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss")
-//    @TableField(value = "create_time")
-//    private Date createTime;
-//
-//    @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss")
-//    @TableField(value = "update_time")
-//    private Date updateTime;
-//
-//    @TableField(value = "del")
-//    private Integer del;
-//
-//    @TableField(value = "name")
-//    private String name;
 }

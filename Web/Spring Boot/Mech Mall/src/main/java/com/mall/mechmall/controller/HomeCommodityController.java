@@ -99,4 +99,15 @@ public class HomeCommodityController {
         json.put(DATA, products);
         return json;
     }
+
+    /*查询所有分类*/
+    @GetMapping("/productCategory/getProductCategories")
+    public Object getProductCategories(@RequestParam int parentId){
+        List<ProductCategory> productCategories = productCategoryService.getProductCategories(parentId);
+        int total = productCategoryService.countProductCategorys();
+        JSONObject json = getJson("获取成功", true);
+        json.put(DATA, productCategories);
+        json.put("total", total);
+        return json;
+    }
 }

@@ -20,11 +20,11 @@ onMounted(() => {
 
 <template>
   <el-carousel
-    v-if="carouselList.length"
+    v-if="carouselList.length > 0"
     class="swiper-container"
     type="card"
     height="20vw"
-    :interval="1000"
+    :interval="2000"
   >
     <el-carousel-item v-for="(item, index) in carouselList" :key="index">
       <img :src="apiRequests.attachImageUrl(item.imgUrl)" />

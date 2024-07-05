@@ -22,7 +22,7 @@ import java.util.List;
 public class CarouselController {
     @Autowired
     private CarouselService carouselService;
-    @GetMapping("")
+    @GetMapping("/all")
     public JSONObject findAllCarousel(){
         List<Carousel> allCarousels = carouselService.findAllCarousels();
         JSONObject json = getJson("获取轮播图成功", true);

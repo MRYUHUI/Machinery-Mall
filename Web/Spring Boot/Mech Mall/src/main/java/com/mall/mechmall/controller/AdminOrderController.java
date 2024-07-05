@@ -39,9 +39,10 @@ public class AdminOrderController {
 
     /**
      * 管理员跟新用户信息
-     * @param order
+     * @param
      * @return Object
      */
+
     @PostMapping("/update")
     public Object updateOrder(@RequestBody Order order) {
         boolean updated = orderService.updateOrderInfo(order);
@@ -49,72 +50,21 @@ public class AdminOrderController {
             // 获取更新后的订单信息
             Order newOrder = orderService.findOrderByOrderNo(order.getOrderNo());
             return (newOrder);
-//            JSONObject json = getJson("信息修改成功", true);
-//            json.put(DATA, newOrder);
-//            return json;
         } else {
             return getJson("信息修改失败", false);
         }
     }
-//    @PostMapping("/update")
-//    public ResponseEntity<Object> updateOrder(@RequestBody Order updatedOrder) {
-//        // 假设 updatedOrder 包含了前端发送过来的修改后的订单信息
-//        boolean success = orderService.updateOrder(updatedOrder);
-//        if (success) {
-//            Order savedOrder = orderService.findOrderByOrderNo(updatedOrder.getOrderNo());
-//            return ResponseEntity.ok(savedOrder); // 返回修改后的订单信息
-//        } else {
-//            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("订单更新失败");
-//        }
-//    }
-//--------------------------------------------
-//    @GetMapping("/deleteOrder")
-//    public Object deleteOrder(@RequestParam("order_no") Integer orderNo) {
-//        boolean deleted = orderService.deleteOrder(orderNo);
-//        if (deleted) {
-//            return getJson("订单删除成功", true);
-//        } else {
-//            return getJson("订单删除失败", false);
-//        }
-//    }
 
-//    @RestController
-//    @RequestMapping("/admin/order")
-//    public class AdminOrderController {
         @GetMapping("/deleteOrder")
-        public Object deleteOrder(@RequestParam("order_no") Integer orderNo) {
-            boolean deleted = orderService.deleteOrder(orderNo);
-            if (deleted) {
-                return getJson("订单删除成功", true);
-            } else {
-                return getJson("订单删除失败", false);
-            }
+        public Object deleteOrder(@RequestParam("order_no") String orderNo) {
+//            boolean deleted = orderService.deleteOrder(orderNo);
+//            if (deleted) {
+//                return getJson("订单删除成功", true);
+//            } else {
+//                return getJson("订单删除失败", false);
+//            }
+            return null;
         }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
     /**
      * 获取所有用户信息
      * @return Object
