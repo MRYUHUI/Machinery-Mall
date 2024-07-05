@@ -125,5 +125,10 @@ public class OrderServiceImpl implements OrderService {
     public boolean updateOrderInfo(Order order) {
         return false;
     }
+
+    @Override
+    public boolean updateByOrderNo(Order order) {
+        return orderMapper.updateByOrderNo(order) > 0;
+    }
 }
 

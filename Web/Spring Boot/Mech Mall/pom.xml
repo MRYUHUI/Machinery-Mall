@@ -20,6 +20,11 @@
         <java.version>17</java.version>
     </properties>
     <dependencies>
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-configuration-processor</artifactId>
+            <optional>true</optional>
+        </dependency>
         <!--支付宝依赖 -->
         <dependency>
             <groupId>com.alipay.sdk</groupId>
@@ -32,6 +37,7 @@
             <artifactId>alipay-sdk-java</artifactId>
             <version>4.22.113.ALL</version>
         </dependency>
+
 
         <!-- Spring Security -->
         <dependency>

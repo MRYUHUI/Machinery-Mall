@@ -4,8 +4,8 @@ export default {
 		name: "", // 产品名
 		editProductInfoDiaVisible: false, // 是否显示编辑用户信息对话框
 		isAdminProductFresh: false, // 管理用户信息是否要刷新
-		addProductInfoDiaVisible: false ,//是否显示增加用户对话框
-		selectedProductInfo: { 
+		addProductInfoDiaVisible: false,//是否显示增加用户对话框
+		selectedProductInfo: {
 			id: '',
 			name: '',
 			productId: '',
@@ -27,7 +27,8 @@ export default {
 		selectedProductInfo: (state) => state.selectedProductInfo,
 		editProductInfoDiaVisible: (state) => state.editProductInfoDiaVisible,
 		isAdminProductFresh: (state) => state.isAdminProductFresh,
-		addProductInfoDiaVisible: (state) => state.addProductInfoDiaVisible
+		addProductInfoDiaVisible: (state) => state.addProductInfoDiaVisible,
+		stock: (state) => state.selectedProductInfo.stock
 	},
 	mutations: {
 		setid: (state, id) => {
@@ -50,12 +51,16 @@ export default {
 			state.editProductInfoDiaVisible = editProductInfoDiaVisible
 		},
 		setIsAdminProductFresh: (state, isAdminProductFresh) => {
-			state.isAdminProductFresh = isAdminProductFresh	
+			state.isAdminProductFresh = isAdminProductFresh
 		},
-		setAddProductInfoDiaVisible:(state,addProductInfoDiaVisible) =>{
+		setAddProductInfoDiaVisible: (state, addProductInfoDiaVisible) => {
 			state.addProductInfoDiaVisible = addProductInfoDiaVisible
 			console.log('Updating addProductInfoDiaVisible:', addProductInfoDiaVisible);
+		},
+		setStock: (state, stock) => {
+			state.selectedProductInfo.stock = stock
 		}
+
 
 	},
 	actions: {
@@ -71,6 +76,6 @@ export default {
 		updateSelectedProductInfoField ({ commit }, { field, value }) {
 			commit('updateSelectedProductInfoField', { field, value });
 		}
-		
+
 	}
 };

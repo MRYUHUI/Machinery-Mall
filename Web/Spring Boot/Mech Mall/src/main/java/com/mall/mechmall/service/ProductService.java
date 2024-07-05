@@ -40,6 +40,7 @@ public interface ProductService {
 
     /**
      * 查找相应顶级分类的商品
+     *
      * @return 商品列表
      */
     public Map<String, List<Product>> findAllProductOrderByHighestCategoryLimit(int limit);
@@ -50,4 +51,8 @@ public interface ProductService {
     public List<Product> findProductsByProductIdLimit(int limit, int productId);
 
     List<Product> findProductsByProductId(int id);
+
+    boolean updateStock(int id, int stock);
+
+    int findStockById(@Param("id") int id);
 }

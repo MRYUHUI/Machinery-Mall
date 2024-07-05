@@ -89,11 +89,21 @@ const buyNow = async () => {
   orderItem.orderId = res1.data
 
   const res2 = await apiRequests.addOrderItem(orderItem)
-  if (res2.success) {
-    ElMessage.success(res2.message)
-  } else {
+  if (!res2.success) {
     ElMessage.error(res2.message)
+    return
   }
+  // 减少库存
+  store.commit('setStock', store.getters.stock - quantity.value)
+  const res3 = await apiRequests.updateStock(curProduct.value)
+  if (res3.success) {
+    ElMessage.success(res3.message)
+    init()
+  }
+  else {
+    ElMessage.error(res3.message)
+  }
+
 };
 
 // 加入购物车
@@ -106,8 +116,7 @@ const addToCart = () => {
 const curProduct = computed(() => store.getters.selectedProductInfo);
 const userId = computed(() => store.getters.userId)
 
-// hook ======================
-onMounted(async () => {
+const init = async () => {
   // 初始化时设置购买数量为1
   quantity.value = 1;
   // 获取用户地址
@@ -118,6 +127,10 @@ onMounted(async () => {
   if (defaultAddress) {
     selectedAddress.value = defaultAddress.id
   }
+}
+// hook ======================
+onMounted(async () => {
+  init()
 });
 </script>
 

@@ -3,6 +3,7 @@ package com.mall.mechmall.mapper;
 import com.mall.mechmall.domain.Product;
 import com.mall.mechmall.domain.ProductCategory;
 import org.apache.ibatis.annotations.*;
+import org.springframework.security.core.parameters.P;
 
 import java.util.List;
 
@@ -71,7 +72,7 @@ public interface ProductMapper {
     List<Product> findAllProductsByStatusAndHot();
 
     @Select("SELECT * FROM product_category WHERE parent_id = #{id}")
-    public List<ProductCategory> findProductCategoriesByParentId(@Param("id")int id);
+    public List<ProductCategory> findProductCategoriesByParentId(@Param("id") int id);
 
     @Select("SELECT * FROM products WHERE status = 3 AND is_hot = 1 LIMIT #{limit}")
     List<Product> findProductsByStatusAndHotWithLimit(@Param("limit") int limit);
@@ -85,4 +86,10 @@ public interface ProductMapper {
 
     @Select("SELECT * FROM products WHERE product_id = #{id} AND status = 3")
     List<Product> findProductsByProductId(@Param("id") int id);
+
+    @Update("UPDATE products SET stock = #{stock} WHERE id = #{id}")
+    Integer updateStock(@Param("id") int id, @Param("stock") int stock);
+
+    @Select("SELECT stock FROM products WHERE id = #{id}")
+    Integer findStockById(@Param("id") int id);
 }

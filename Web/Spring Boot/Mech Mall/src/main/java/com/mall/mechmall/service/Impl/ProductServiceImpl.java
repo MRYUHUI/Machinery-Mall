@@ -133,4 +133,14 @@ public class ProductServiceImpl implements ProductService {
         return productMapper.findProductsByProductId(id);
     }
 
+    @Override
+    public boolean updateStock(int id, int stock) {
+        return productMapper.updateStock(id, stock) > 0;
+    }
+
+    @Override
+    public int findStockById(int id) {
+        return productMapper.findStockById(id);
+    }
+
 }

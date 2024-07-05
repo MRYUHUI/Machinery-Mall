@@ -6,10 +6,8 @@ import com.mall.mechmall.domain.ProductCategory;
 import com.mall.mechmall.service.ProductCategoryService;
 import com.mall.mechmall.service.ProductService;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
+
 import static com.mall.mechmall.utils.Consts.*;
 
 import java.util.List;
@@ -108,6 +106,21 @@ public class HomeCommodityController {
         JSONObject json = getJson("获取成功", true);
         json.put(DATA, productCategories);
         json.put("total", total);
+        return json;
+    }
+
+    @PostMapping("/update/stock")
+    public Object updateStock(@RequestBody Product product){
+        if(productService.updateStock(product.getId(), product.getStock()))
+            return getJson("更新订单成功", true);
+        return getJson("更新订单失败", false);
+    }
+
+    @GetMapping("/find/stock")
+    public Object findStockById(@RequestParam int id){
+        int stockById = productService.findStockById(id);
+        JSONObject json = getJson("获取成功", true);
+        json.put(DATA, stockById);
         return json;
     }
 }

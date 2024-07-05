@@ -1,6 +1,13 @@
 package com.mall.mechmall.domain;
-
 import lombok.Data;
+
+/**
+ * @Author
+ * @Date Created in  2023/5/5 15:26
+ * @DESCRIPTION:
+ * @Version V1.0
+ */
+
 
 @Data
 public class AliPay {

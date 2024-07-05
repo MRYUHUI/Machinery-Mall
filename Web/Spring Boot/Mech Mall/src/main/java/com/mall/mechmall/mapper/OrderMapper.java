@@ -82,4 +82,27 @@ public interface OrderMapper{
     Integer checkOrderStatus(String order_no);
 
     BigDecimal findOrderAmount(String order_no);
+
+    @Update({
+            "<script>",
+            "UPDATE orders",
+            "<set>",
+            "<if test='uid != null'>uid = #{uid},</if>",
+            "<if test='addrId != null'>addr_id = #{addrId},</if>",
+            "<if test='amount != null'>amount = #{amount},</if>",
+            "<if test='type != null'>type = #{type},</if>",
+            "<if test='freight != null'>freight = #{freight},</if>",
+            "<if test='status != null'>status = #{status},</if>",
+            "<if test='paymentTime != null'>payment_time = #{paymentTime},</if>",
+            "<if test='deliveryTime != null'>delivery_time = #{deliveryTime},</if>",
+            "<if test='finishTime != null'>finish_time = #{finishTime},</if>",
+            "<if test='closeTime != null'>close_time = #{closeTime},</if>",
+            "<if test='created != null'>created = #{created},</if>",
+            "updated = NOW(),",
+            "</set>",
+            "WHERE order_no = #{orderNo}",
+            "</script>"
+    })
+    public int updateByOrderNo(Order order);
+
 }

@@ -55,4 +55,6 @@ public interface OrderService {
 
     boolean updateOrderInfo(Order order);
 
+    public boolean updateByOrderNo(Order order);
+
 }

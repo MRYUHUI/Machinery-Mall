@@ -31,17 +31,26 @@
         <div class="order-info-item">
           订单总额：<span class="total-amount">{{ orderItem.totalPrice }}</span>
         </div>
-        <el-button
+        <!-- 未支付 -->
+        <div
+          class="not-pay"
           v-if="orderList.find((o) => o.id === orderItem.orderId)?.status === 1"
-          size="mini"
-          type="primary"
-          @click="payOrder(order)"
-          >支付</el-button
         >
-        <el-button
-          v-if="orderList.find((o) => o.id === orderItem.orderId)?.status === 1"
-          size="mini"
-          @click="cancelOrder(orderItem)"
+          <el-button
+            size="mini"
+            type="primary"
+            @click="
+              payOrder(
+                orderList.find((o) => o.id === orderItem.orderId),
+                orderItem.goodsName
+              )
+            "
+            >支付</el-button
+          >
+        </div>
+        <!-- 已支付 -->
+        <div v-else class="have-pay">已支付</div>
+        <el-button size="mini" @click="cancelOrder(orderItem)"
           >取消订单</el-button
         >
         <el-button size="mini" @click="showOrderDetails(orderItem)"
@@ -64,7 +73,7 @@ import { ref, computed, onMounted, watch } from 'vue';
 import apiRequests from '@/apis';
 import { useStore } from 'vuex';
 import detailUserOrder from './detailUserOrder.vue';
-import { ElMessage } from 'element-plus';
+import { ElMessage, ElMessageBox } from 'element-plus';
 
 const orderItemList = ref([]);
 const orderList = ref([]);
@@ -137,6 +146,18 @@ const showOrderDetails = (order) => {
 
 // 删除订单和订单项
 const cancelOrder = async (orderItem) => {
+  // 更新库存
+  const { data: oldStock } = await apiRequests.findStockById(orderItem.goodsId)
+  const curStock = oldStock + orderItem.quantity
+  const product = {
+    id: orderItem.goodsId,
+    stock: curStock
+  }
+  const res1 = await apiRequests.updateStock(product)
+  if (!res1.success) {
+    ElMessage.error(res.message)
+    return
+  }
   const orderId = orderList.value.find((o) => o.id === orderItem.orderId)?.id
   const orderItemId = orderItem.id
   const res = await apiRequests.deleteOrderAndOrderItem(orderId, orderItemId)
@@ -148,6 +169,37 @@ const cancelOrder = async (orderItem) => {
     ElMessage.error(res.message)
   }
 }
+
+// 支付订单
+const payOrder = (order, goodName) => {
+  console.log(order.orderNo);
+
+  // 弹出确认框
+  ElMessageBox.confirm('确认支付？ 是否继续?', '付款确认', {
+    confirmButtonText: '确定',
+    cancelButtonText: '取消',
+    type: 'warning'
+  }).then(() => {
+    // 构造支付请求URL
+    const orderId = order.id
+    const subject = goodName;
+    const traceNo = order.orderNo;
+    const totalAmount = order.amount;
+    console.log(`${subject}\n${traceNo}\n${totalAmount}\n`);
+
+    // 打开支付页面
+    window.open(`http://localhost:8080/alipay/pay?subject=${subject}&traceNo=${traceNo}&totalAmount=${totalAmount}`);
+    // 显示付款成功信息
+    ElMessage.success('正在跳转到支付页面...');
+  }).catch(() => {
+    // 用户点击取消后，显示取消信息
+    ElMessage.info('已取消付款');
+    load();
+  });
+}
+
+
+
 onMounted(() => {
   getAllOrderItem();
   getOrderByUserId();
@@ -192,5 +244,11 @@ onMounted(() => {
 .total-amount {
   font-weight: bold;
   color: red;
+}
+
+.have-pay {
+  font-size: 20px;
+  font-weight: bold;
+  color: rgb(2, 71, 0);
 }
 </style>
