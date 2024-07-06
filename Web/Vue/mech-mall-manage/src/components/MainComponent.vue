@@ -93,8 +93,9 @@ onMounted(async () => {
   color: #000000;
 }
 .nav-container {
-  width: 100vw;
+  width: 800px;
   display: flex;
   justify-content: center;
+  margin-left: 350px;
 }
 </style>

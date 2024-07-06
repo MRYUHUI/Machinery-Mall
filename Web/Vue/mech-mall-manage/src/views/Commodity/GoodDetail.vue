@@ -78,6 +78,10 @@ const setOrderItem = () => {
 }
 // 购买
 const buyNow = async () => {
+  if (!isLogin.value) {
+    ElMessage.error('请先登录')
+    return
+  }
   setOrder()
   order.amount = quantity.value * curProduct.value.price
   const res1 = await apiRequests.addOrder(order)
@@ -107,25 +111,39 @@ const buyNow = async () => {
 };
 
 // 加入购物车
-const addToCart = () => {
-  console.log('加入购物车，数量: ', quantity.value);
+const addToCart = async () => {
+  if (!isLogin.value) {
+    ElMessage.error('请先登录')
+    return
+  }
+  try {
+    const res = await apiRequests.addCartItem(userId.value, curProduct.value.id, quantity.value);
+    if (res.success) {
+      ElMessage.success('加入购物车成功');
+    } else {
+      ElMessage.error(res.message || '加入购物车失败');
+    }
+  } catch (error) {
+    ElMessage.error('请求处理异常');
+  }
 };
-
 // computed ============================
 // 当前商品
 const curProduct = computed(() => store.getters.selectedProductInfo);
 const userId = computed(() => store.getters.userId)
-
+const isLogin = computed(() => store.getters.isLogin)
 const init = async () => {
   // 初始化时设置购买数量为1
   quantity.value = 1;
-  // 获取用户地址
-  const { data: res } = await apiRequests.getUserAddress(userId.value)
-  addrList.value = res
-  // 查找default字段为1的地址
-  const defaultAddress = addrList.value.find(address => address.dfault === 1)
-  if (defaultAddress) {
-    selectedAddress.value = defaultAddress.id
+  if (isLogin.value) {
+    // 获取用户地址
+    const { data: res } = await apiRequests.getUserAddress(userId.value)
+    addrList.value = res
+    // 查找default字段为1的地址
+    const defaultAddress = addrList.value.find(address => address.dfault === 1)
+    if (defaultAddress) {
+      selectedAddress.value = defaultAddress.id
+    }
   }
 }
 // hook ======================

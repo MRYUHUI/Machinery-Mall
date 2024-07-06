@@ -92,4 +92,9 @@ public interface ProductMapper {
 
     @Select("SELECT stock FROM products WHERE id = #{id}")
     Integer findStockById(@Param("id") int id);
+
+    //按关键字返回商品
+    @Select("SELECT * FROM products WHERE name LIKE CONCAT('%', #{keyword}, '%')")
+    public List<Product> searchProductCategorys(@Param("keyword") String keyword);
+
 }

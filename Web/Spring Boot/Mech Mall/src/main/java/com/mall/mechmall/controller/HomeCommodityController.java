@@ -123,4 +123,14 @@ public class HomeCommodityController {
         json.put(DATA, stockById);
         return json;
     }
+
+    @GetMapping("/search")
+    public JSONObject findSearchCommodity(@RequestParam String keyword){
+        List<Product> searchProducts = productService.searchProductCategorys(keyword);
+        JSONObject json = getJson("搜索商品成功", true);
+        json.put(DATA, searchProducts);
+        return json;
+    }
+
+    
 }

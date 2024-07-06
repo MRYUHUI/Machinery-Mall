@@ -143,4 +143,9 @@ public class ProductServiceImpl implements ProductService {
         return productMapper.findStockById(id);
     }
 
+    @Override
+    public List<Product> searchProductCategorys(String keyword){
+        return productMapper.searchProductCategorys(keyword);
+    }
+
 }

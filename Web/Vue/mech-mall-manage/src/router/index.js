@@ -18,6 +18,15 @@ const routes = [
 				},
 				children: [
 					{
+						// 搜索商品详情
+						path: '/search-detail',
+						name: 'search-detail',
+						component: () => import('@/views/Home/DisplaySearchGoods.vue'),
+						meta: {
+							breadcrumb: '搜索商品'
+						},
+					},
+					{
 						// 前台的首页
 						path: '/',
 						name: 'font-page',

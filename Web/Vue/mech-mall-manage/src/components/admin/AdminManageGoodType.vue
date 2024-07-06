@@ -45,7 +45,7 @@ const ReturnPreviousNode = async (row) => {
     let previousNodeParentList = store.getters.previousNodeParentList;
     // console.log(store.getters.previousNodeParentList);
     const previousNodeParent = previousNodeParentList.pop();
-    const res = await apiRequests.allProductCategoryChildrens(previousNodeParent);
+    const res = await apiRequests.allProductCategoryChildrens(previousNodeParent, currentPage.value, pageSize.value);
     if (previousNodeParent == 0) {
       store.commit('newPreviousNodeParentList', []);
       backbuttonDiaVisible.value = false;
@@ -58,7 +58,7 @@ const ReturnPreviousNode = async (row) => {
 }
 // 查看子节点函数
 const handleViewSubNodes = async (row) => {
-  const res = await apiRequests.allProductCategoryChildrens(row.id);
+  const res = await apiRequests.allProductCategoryChildrens(row.id, currentPage.value, pageSize.value);
   store.commit('setPreviousNodeParentList', row.parentId);
   // console.log(row.parentId);
   if (row.parentId == 0) { backbuttonDiaVisible.value = true; }

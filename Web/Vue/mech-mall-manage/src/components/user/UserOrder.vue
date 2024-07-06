@@ -36,6 +36,8 @@
           class="not-pay"
           v-if="orderList.find((o) => o.id === orderItem.orderId)?.status === 1"
         >
+          <!-- 买家账户：qcbvcn4823@sandbox.com
+				密码：111111 -->
           <el-button
             size="mini"
             type="primary"
@@ -47,12 +49,13 @@
             "
             >支付</el-button
           >
+          <el-button size="mini" @click="cancelOrder(orderItem)"
+            >取消订单</el-button
+          >
         </div>
         <!-- 已支付 -->
         <div v-else class="have-pay">已支付</div>
-        <el-button size="mini" @click="cancelOrder(orderItem)"
-          >取消订单</el-button
-        >
+
         <el-button size="mini" @click="showOrderDetails(orderItem)"
           >商品详情</el-button
         >
@@ -172,7 +175,6 @@ const cancelOrder = async (orderItem) => {
 
 // 支付订单
 const payOrder = (order, goodName) => {
-  console.log(order.orderNo);
 
   // 弹出确认框
   ElMessageBox.confirm('确认支付？ 是否继续?', '付款确认', {
@@ -194,7 +196,6 @@ const payOrder = (order, goodName) => {
   }).catch(() => {
     // 用户点击取消后，显示取消信息
     ElMessage.info('已取消付款');
-    load();
   });
 }
 

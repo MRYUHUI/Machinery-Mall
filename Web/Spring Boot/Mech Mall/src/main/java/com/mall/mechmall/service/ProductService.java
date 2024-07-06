@@ -55,4 +55,6 @@ public interface ProductService {
     boolean updateStock(int id, int stock);
 
     int findStockById(@Param("id") int id);
+
+    List<Product> searchProductCategorys(String keyword);
 }

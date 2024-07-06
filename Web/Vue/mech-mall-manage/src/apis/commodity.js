@@ -19,5 +19,7 @@ const commodityApi = {
 	updateStock: (product) => httpInstance.post('/commodity/home/update/stock', product),
 
 	findStockById: (id) => httpInstance.get('/commodity/home/find/stock', { params: { id } }),
+
+	findSearchCommodity: (keyword) => httpInstance.get("/commodity/home/search", { params: { keyword } })
 };
 export default commodityApi;

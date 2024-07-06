@@ -1,11 +1,11 @@
 <script setup>
 import { useStore } from 'vuex';
 import { useRouter } from 'vue-router';
-import { computed } from 'vue';
+import { computed, ref } from 'vue';
 import { SystemConsts } from '@/enums/SystemConsts';
 const store = useStore();
 const router = useRouter();
-
+const searchQuery = ref("")
 const username = computed(() => store.getters.account);
 const projectName = SystemConsts.PROJECT_NAME;
 const goToProfile = () => {
@@ -40,12 +40,25 @@ const goToRegister = () => {
 const goToHome = () => {
   router.push({ name: 'user-home' });
 }
+
+// 搜索函数
+const handleSearch = () => {
+  store.commit('setSearchQuery', searchQuery.value)
+  router.push({ name: 'search-detail' })
+};
 </script>
 
 <template>
   <div class="user-header">
-    <h2 class="logo setPoint" @click="goToHome">{{ projectName }}</h2>
-
+    <h3 class="logo setPoint" @click="goToHome">{{ projectName }}</h3>
+    <!-- 搜索框 -->
+    <el-input
+      class="search-input"
+      placeholder="搜索..."
+      prefix-icon="el-icon-search"
+      v-model="searchQuery"
+      @keyup.enter="handleSearch"
+    ></el-input>
     <div class="hasLogin" v-if="isLogin">
       <el-button class="mall-button" @click="goToMyMallHome"
         >我的商城</el-button
@@ -155,5 +168,10 @@ const goToHome = () => {
 
 .main-content {
   padding-top: 80px;
+}
+
+.search-input {
+  max-width: 600px;
+  margin-right: auto;
 }
 </style>
