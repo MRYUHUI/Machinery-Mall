@@ -3,11 +3,14 @@ package com.mall.mechmall.service.Impl;
 import com.mall.mechmall.domain.ProductCategory;
 import com.mall.mechmall.mapper.ProductCategoryMapper;
 import com.mall.mechmall.service.ProductCategoryService;
-import org.apache.ibatis.annotations.Param;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
+
+import java.util.Comparator;
 
 import java.util.List;
+import java.util.stream.Collectors;
 
 /**
  * @Author:商品类型管理模块
@@ -18,159 +21,187 @@ import java.util.List;
 public class ProductCategoryImpl implements ProductCategoryService {
     @Autowired
     private ProductCategoryMapper productCategoryMapper;
-
+    /*更新或新增节点*/
     @Override
-    public int insertProductCategory(ProductCategory productCategory){
-        return productCategoryMapper.insertProductCategory(productCategory);
-    }
+    @Transactional
+    public boolean updateProductCategory(ProductCategory productCategory, int oldParentId) {
 
-    @Override
-    public boolean updateProductCategory(ProductCategory productCategory ,int oldParentId) {
+        if(oldParentId == -1){
+            return productCategoryMapper.insertProductCategory(productCategory) > 0;
+        }
+
         // 1. 更新当前节点信息
-        int newParentid = productCategory.getParentId();
-        int parentlevel = 0; // 默认层数为0，即根节点
+        int newParentId = productCategory.getParentId();
+        int parentLevel = 0; // 默认层数为0，即根节点
         ProductCategory parentProductCategory = null;
 
         // 更新当前节点的层数和排序号
-        if (newParentid != 0) {
-            parentProductCategory = productCategoryMapper.findProductCategoryById(newParentid);
-            parentlevel = parentProductCategory.getLevel();
+        if (newParentId != 0) {
+            parentProductCategory = productCategoryMapper.findProductCategoryById(newParentId);
+            parentLevel = parentProductCategory.getLevel();
         }
-        productCategory.setLevel(parentlevel + 1);
+        productCategory.setLevel(parentLevel + 1);
 
-        if (oldParentId != newParentid) { // 只有在父节点发生变化时才更新更改节点的SortOrder
-            int newParentChildCount = productCategoryMapper.countProductCategoryChildrens(newParentid);
-            productCategory.setSortOrder(newParentChildCount+1);
+        // 如果父节点发生变化，需要更新排序号
+        if (oldParentId != newParentId) {
+            // 更新新的父节点下的排序号
+            int newParentChildCount = productCategoryMapper.countProductCategoryChildrens(newParentId);
+            productCategory.setSortOrder(newParentChildCount + 1);
+
+            // 更新原父节点的所有孩子的SortOrder值
+            List<ProductCategory> children = productCategoryMapper.findProductCategoriesByParentId(oldParentId);
+            // 滤掉 id 等于 移走节点id 的项
+            children = children.stream()
+                    .filter(child -> child.getId() != productCategory.getId())
+                    .collect(Collectors.toList());
+            // 对子节点按照 sortOrder 进行排序
+            children.sort(Comparator.comparingInt(ProductCategory::getSortOrder));
+            // 更新子节点的 sortOrder
+            int sortOrder = 1;
+            for (ProductCategory child : children) {
+                int result = productCategoryMapper.updateChildSortOrder(child.getId(), sortOrder);
+                if (result == 0) {
+                    throw new RuntimeException("Failed to update sort order for child with id: " + child.getId());
+                }
+                sortOrder++;
+            }
         }
-        //无论父节点有没有发生变化都要更新更改节点原父节点的所有孩子的SortOrder值
-//        List<Integer> oldParentChildIds = productCategoryMapper.findProductCategoryChildrenIds(oldParentId);
-//        int newSortOrder = 1;
-//        for (Integer childId : oldParentChildIds) {
-//            if(childId != productCategory.getId()){
-//                ProductCategory child = productCategoryMapper.findProductCategoryById(childId);
-//                child.setSortOrder(newSortOrder);
-//                newSortOrder++;
-//            }
-//        }
 
         // 执行当前节点的更新
         boolean updated = productCategoryMapper.updateProductCategory(productCategory) > 0;
+        if (!updated) {
+            return false;
+        }
 
         // 2. 递归更新所有子节点信息
         List<Integer> childIds = productCategoryMapper.findProductCategoryChildrenIds(productCategory.getId());
         for (int childId : childIds) {
             ProductCategory child = productCategoryMapper.findProductCategoryById(childId);
+            // 更新子节点的状态为当前节点的状态
+            child.setStatus(productCategory.getStatus());
             // 递归调用更新子节点
-            boolean childUpdated = updateProductCategory(child , productCategory.getId());
+            boolean childUpdated = updateProductCategory(child, productCategory.getId());
             if (!childUpdated) {
                 // 如果子节点更新失败，则当前更新也失败
                 return false;
             }
         }
 
-        return updated;
+        return true;
     }
 
-
-    @Override
-    public List<ProductCategory> findProductCategoriesByParentId(int parentId){
-        return productCategoryMapper.findProductCategoriesByParentId(parentId);
-    }
-
+    /*通过ID查询节点*/
     @Override
     public ProductCategory findProductCategoryById(int id){
         return productCategoryMapper.findProductCategoryById(id);
     }
 
+    // 2024.7.4
     @Override
-    public boolean deleteProductCategory(int id){
+    public List<ProductCategory> findProductCategoriesByParentId(int id) {
+        return productCategoryMapper.findProductCategoriesByParentId(id);
+    }
+
+    @Override
+    public List<ProductCategory> findProductCategoryByParentId(int id){
+        return productCategoryMapper.findProductCategoriesByParentId(id);
+    }
+    /*通过name查询节点*/
+    @Override
+    public ProductCategory findProductCategoryByName(String name){
+        return productCategoryMapper.findProductCategoryByName(name);
+    }
+
+    /*删除单个节点*/
+    @Override
+    public boolean deleteProductCategory(int id , int parentId){
+        ProductCategory productCategory = productCategoryMapper.findProductCategoryById(id);
+        // 有子分类不能删除，不能与递归删除共用
+        // 状态为0不能删除
+        if(productCategoryMapper.countProductCategoryChildrens(id) != 0 || !productCategory.getStatus()){
+          return false;
+        }
+        // 更新原父节点的所有孩子的SortOrder值
+        List<ProductCategory> children = productCategoryMapper.findProductCategoriesByParentId(parentId);
+        // 滤掉 id 等于 移走节点id 的项
+        children = children.stream()
+                .filter(child -> child.getId() != id)
+                .collect(Collectors.toList());
+        // 对子节点按照 sortOrder 进行排序
+        children.sort(Comparator.comparingInt(ProductCategory::getSortOrder));
+        // 更新子节点的 sortOrder
+        int sortOrder = 1;
+        for (ProductCategory child : children) {
+            int result = productCategoryMapper.updateChildSortOrder(child.getId(), sortOrder);
+            if (result == 0) {
+                throw new RuntimeException("Failed to update sort order for child with id: " + child.getId());
+            }
+            sortOrder++;
+        }
         return productCategoryMapper.deleteProductCategory(id);
     }
 
+    /*查询子节点*/
     @Override
-    public List<Integer> findProductCategoryChildrenIds(int parent_id){
-        return productCategoryMapper.findProductCategoryChildrenIds(parent_id);
+    public List<ProductCategory> findProductCategoryChildrens(int parent_id,int page, int size){
+        return productCategoryMapper.findProductCategoryChildrens(parent_id,(page - 1) * size, size);
     }
 
-    @Override
-    public List<ProductCategory> findProductCategoryChildrens(int parent_id){
-        return productCategoryMapper.findProductCategoryChildrens(parent_id);
-    }
+    /*递归删除节点及其子节点*/
+//    @Override
+//    public boolean deleteProductCategoryAndChildren(int id, int parentId) {
+//        List<Integer> childIds = productCategoryMapper.findProductCategoryChildrenIds(id);
+//        for (int childId : childIds) {
+//            deleteProductCategoryAndChildren(childId, id);
+//        }
+//        return deleteProductCategory(id,parentId);
+//    }
 
-    //递归删除节点及其子节点
-    @Override
-    public boolean deleteProductCategoryAndChildren(int id){
-        List<Integer> childIds = productCategoryMapper.findProductCategoryChildrenIds(id);
-
-        for (int childId : childIds) {
-            deleteProductCategoryAndChildren(childId);
-        }
-
-        return deleteProductCategory(id);
-    }
-
-    @Override
-    public boolean deleteProductCategoryChildren(int parent_id){
-        return productCategoryMapper.deleteProductCategoryChildren(parent_id);
-    }
-
-    @Override
-    public ProductCategory findProductCategoryByParentIdAndName(int parentId, String name){
-        return productCategoryMapper.findProductCategoryByParentIdAndName(parentId, name);
-    }
-
-    @Override
-    public List<ProductCategory> findAllProductCategorysPage(int page, int size){
-        return productCategoryMapper.findAllProductCategorysPage(page * size, size);
-    }
-
+    /*返回所有节点*/
     @Override
     public List<ProductCategory> findAllProductCategorys(){
         return productCategoryMapper.findAllProductCategorys();
     }
 
-    @Override
-    public List<ProductCategory> findAllValidityProductCategorys(int page, int size){
-        return productCategoryMapper.findAllValidityProductCategorys(page * size, size);
-    }
-
-    @Override
-    public List<ProductCategory> findAllInvalidityProductCategorys(int page, int size){
-        return productCategoryMapper.findAllInvalidityProductCategorys(page * size, size);
-    }
-
+    /*查询所有顶级节点*/
     @Override
     public List<ProductCategory> findAllHighestProductCategorys(int page, int size){
-        return productCategoryMapper.findAllHighestProductCategorys(page * size, size);
+        return productCategoryMapper.findAllHighestProductCategorys((page - 1) * size, size);
     }
 
+    /*返回所有节点的数量*/
     @Override
     public int countProductCategorys(){
         return productCategoryMapper.countProductCategorys();
     }
 
-    @Override
-    public int countValidityProductCategorys(){
-        return productCategoryMapper.countValidityProductCategorys();
-    }
-
-    @Override
-    public int countInvalidityProductCategorys(){
-        return productCategoryMapper.countInvalidityProductCategorys();
-    }
-
+    /*返回子节点数量*/
     @Override
     public int countProductCategoryChildrens(int id){
         return productCategoryMapper.countProductCategoryChildrens(id);
     }
 
+    /*按关键字分页查询节点*/
     @Override
     public List<ProductCategory> searchProductCategorys(String keyword, int page, int size){
-        return productCategoryMapper.searchProductCategorys(keyword, page * size, size);
+        return productCategoryMapper.searchProductCategorys(keyword, (page - 1) * size, size);
     }
 
+    /*返回有关键字节点数量*/
     @Override
     public int countProductCategoryByKeyword(String keyword){
         return productCategoryMapper.countProductCategoryByKeyword(keyword);
+    }
+
+    // 2024.7.4
+    @Override
+    public List<ProductCategory> findAllHighestProductCategories() {
+        return productCategoryMapper.findAllHighestProductCategories();
+    }
+
+
+    @Override
+    public List<ProductCategory> getProductCategories(Integer parentId){
+        return productCategoryMapper.getProductCategories(parentId);
     }
 }

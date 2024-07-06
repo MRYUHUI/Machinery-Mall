@@ -11,11 +11,13 @@ import org.springframework.http.HttpMethod;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
+import org.springframework.security.config.annotation.web.builders.WebSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
 import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
+import org.springframework.web.servlet.config.annotation.ResourceHandlerRegistry;
 
 @Configuration
 @EnableWebSecurity
@@ -47,15 +49,24 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
     @Override
     protected void configure(HttpSecurity http) throws Exception {
         http
-                // 禁用 CSRF，因为我们使用 JWT
+                // 禁用 CSRF，因为使用 JWT
                 .csrf().disable()
 
                 // 配置请求授权规则
                 .authorizeRequests()
+//                .antMatchers("/**").permitAll()
                 // 允许所有人访问注册和登录接口
-                .antMatchers("/user/auth/do_register.do", "/user/auth/do_login.do").permitAll()
+                .antMatchers("/user/auth/**").permitAll()
+                .antMatchers("/admin/product/img/update/**").permitAll()
                 // 允许所有人访问静态资源
-                .antMatchers("/assets/**").permitAll()
+                .antMatchers("/static/**").permitAll() // 指定静态资源路径
+                .antMatchers("/static/img/**").permitAll()
+                .antMatchers("/static/img/goods/**").permitAll()
+                .antMatchers("/commodity/**").permitAll()
+                .antMatchers("/static/img/carousel/**").permitAll()
+                .antMatchers("/alipay/**").permitAll()
+                .antMatchers("/carousel/**").permitAll()
+
                 // 允许所有人访问 OPTIONS 请求（为了支持跨域请求的预检请求）
                 .antMatchers(HttpMethod.OPTIONS, "/**").permitAll()
                 // 限制 /admin/** 路径只有 ADMIN 角色可以访问
@@ -73,5 +84,10 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
         // 添加 JWT 过滤器，处理每个请求的 JWT 验证
         http.addFilterBefore(new JwtAuthenticationFilter(jwtUtils, userDetailsService), UsernamePasswordAuthenticationFilter.class);
     }
+    @Override
+    public void configure(WebSecurity web) throws Exception {
+        web.ignoring().antMatchers("/static/**");
+    }
+
 
 }

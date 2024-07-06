@@ -49,9 +49,9 @@ const editRule = {
 const parentCategoryOptions = ref([]);
 
 // 获取下拉选项数据
-const fetchParentCategoryOptions = async (page = -1, size = -1) => {
+const fetchParentCategoryOptions = async () => {
   try {
-    const res = await apiRequests.allProductCategorys(page,size);
+    const res = await apiRequests.allProductCategorys();
     // console.log(res.data)
     if (res.success) {
       parentCategoryOptions.value = res.data.map(category => ({

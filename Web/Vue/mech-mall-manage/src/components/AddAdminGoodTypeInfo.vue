@@ -6,57 +6,36 @@ import { ElMessage } from "element-plus";
 
 const store = useStore();
 const addRef = ref(null);
-const addname = ref();
-const addLevel = ref(0);
+const dialogWidth = '500px';
+const addAdminGoodTypeInfoDiaVisible = computed(() => store.getters.addAdminGoodTypeInfoDiaVisible);
+const ParentId = computed(() => store.getters.adminGoodTypeParentId);
 
+// 暂存表
 const form = reactive({
-  id: '',
   parentId: '',
   name: '',
-  sortOrder: '',
-  status: '',
-  level: '',
-  created: '',
-  updated: '',
 });
 
-const oldform = reactive({
-  id: '',
-  parentId: '',
-  name: '',
-  sortOrder: '',
-  status: '',
-  level: '',
-  created: '',
-  updated: '',
-});
-
+// 刷新表格函数
 const resetForm = () => {
-  form.id = '';
   form.parentId = '';
   form.name = '';
-  form.sortOrder = '';
-  form.status = '';
-  form.level = '';
-  form.created = '';
-  form.updated = '';
 };
 
+// 增加数据规范
 const addRule = {
+  name: [{ required: true, message: '分类名不能为空', trigger: 'blur' }],
 };
 
-const addAdminGoodTypeInfoDiaVisible = computed(() => store.getters.addAdminGoodTypeInfoDiaVisible);
-const dialogWidth = '500px';
-
+// 提交按钮函数
 const onSubmit = () => {
   addRef.value.validate(async (valid) => {
     if (valid) {
-      // console.log(oldform.parentId)
-      const res = await apiRequests.updateAdminGoodTypeInfo(form , oldform.parentId)
+      const res = await apiRequests.addAdminGoodTypeInfo(form.name , form.parentId)
       if (res.success) {
-        const updatedAdminGoodTypeInfo = res.data
+        const addAdminGoodTypeInfo = res.data
         // 调用 store 的 action 保存数据
-        store.dispatch('updateSelectedAdminGoodTypeInfo', updatedAdminGoodTypeInfo);
+        store.dispatch('updateSelectedAdminGoodTypeInfo', addAdminGoodTypeInfo);
         // 通知管理用户界面刷新
         store.commit('setIsAdminGoodTypeFresh', !store.getters.isAdminGoodTypeFresh)
         ElMessage.success(res.message)
@@ -68,21 +47,20 @@ const onSubmit = () => {
       }
     }
   })
-
   store.commit('setAddAdminGoodTypeInfoDiaVisible', false);
 };
 
+// 取消按钮函数
 const cancelEidt = () => {
   resetForm()
   store.commit('setAddAdminGoodTypeInfoDiaVisible', false);
 };
 
-const adminGoodTypeLevel = computed(() => store.getters.adminGoodTypeLevel);
-// const userInfo = computed(() => store.getters.selectedUserInfo);
-// 监听 addAdminGoodTypeInfoDiaVisible 的变化，并更新 addLevel
+// 监听器
 watch(addAdminGoodTypeInfoDiaVisible, () => {
   if (addAdminGoodTypeInfoDiaVisible)
-    Object.assign(addLevel, adminGoodTypeLevel.value);
+    Object.assign(form.parentId, ParentId.value);
+    form.parentId = ParentId.value;
 });
 
 </script>
@@ -106,7 +84,7 @@ watch(addAdminGoodTypeInfoDiaVisible, () => {
     >
       <!-- 所属分类 -->
       <el-form-item label="所属分类" prop="parentId">
-        <el-input v-model="form.parentId" />
+        <el-input v-model="form.parentId" :value="form.parentId" disabled />
       </el-form-item>
       <!-- 分类名称 -->
       <el-form-item label="分类名称" prop="name">

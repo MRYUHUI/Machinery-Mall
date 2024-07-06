@@ -9,7 +9,7 @@ import '@/assets/icon-font/iconfont'
 // 全局引入ElementPlus组件
 import ElementPlus from 'element-plus'
 import zhLocale from 'element-plus/lib/locale/lang/zh-cn'
-
+import { lazyPlugin } from '@/directives/index'
 
 
 
@@ -20,4 +20,5 @@ app.use(router).use(store)
 app.use(ElementPlus, {
 	locale: zhLocale
 })
+app.use(lazyPlugin)
 app.mount('#app')

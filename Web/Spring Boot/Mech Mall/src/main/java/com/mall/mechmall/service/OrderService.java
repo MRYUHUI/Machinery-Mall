@@ -1,95 +1,60 @@
 package com.mall.mechmall.service;
 
 import com.mall.mechmall.domain.Order;
+import org.apache.ibatis.annotations.Param;
 
 import java.math.BigDecimal;
 import java.util.List;
 
-/**接口定义增删改查
+/**
+ * 接口定义增删改查
+ *
  * @Author:ate
  * @Date: 2024-06-25-21:58
  * @Description:
  */
 public interface OrderService {
-        Order findOrderByOrderNo(Integer order_no);
+    //thh增加
+    List<Order> getOrderByUserId(int uid);
 
-        Boolean checkOrderByOrderNo(Integer order_no);
+    Order findOrderByOrderNo(String order_no);
 
-        Boolean checkOrderByUid(Integer uid);
+    Boolean checkOrderByOrderNo(String order_no);
 
-        Boolean checkOrderByAddrId(Integer addr_id);
+    Boolean checkOrderByUid(Integer uid);
 
-        Boolean insertOrder(Order order);
+    Boolean checkOrderByAddrId(Integer addr_id);
 
-        Object findOrderAmount(Integer order_no);
+    public boolean insertOrder(Order order);
 
-        Boolean checkOrderAmount(Integer order_no, BigDecimal amount);
+    Object findOrderAmount(String order_no);
 
-        Boolean updateOrderType(Integer order_no, Integer type);
+    Boolean checkOrderAmount(String order_no, BigDecimal amount);
 
-        Integer findOrderFreight(Integer order_no);
+    Boolean updateOrderType(String order_no, Integer type);
 
-        Boolean updateOrderStatus(Integer order_no, Integer status);
+    Integer findOrderFreight(String order_no);
 
-        List<Order> findAllOrders(int page, int size);
+    Boolean updateOrderStatus(String order_no, Integer status);
 
-        int countOrders();
-//-----------
-      Boolean deleteOrder(Integer orderNo);
+    List<Order> findAllOrders(int page, int size);
 
+    int countOrders();
 
-
-
-        Order findOrderById(Integer order_no);
-
-        Order findOrderByUid(Integer uid);
-
-        List<Order> searchOrders(String keyword, int page, int size);
-
-        int countOrdersByKeyword(String keyword);
-
-        boolean updateOrderInfo(Order order);
+    //-----------
+    public  boolean deleteOrder(Integer orderId);
 
 
+    Order findOrderById(int id);
 
-//        Boolean checkOrderByOrderNo(Integer order_no);
-//        Boolean checkOrderByUid(Integer uid);
-//        Boolean checkOrderByAddrId(Integer addr_id);
-//        Boolean insertOrder(Order order);
-//        BigDecimal findOrderAmount(Integer order_no);
-//        Boolean checkOrderAmount(Integer order_no, BigDecimal amount);
-//        Boolean updateOrderType(Integer order_no, Integer type);
-//        Integer findOrderFeight(Integer order_no);
-//        Boolean updateOrderStatus(Integer order_no, Integer status);
-//        List<Order> findAllOrders(int page, int size);
-//        int countOrders();
-//        Boolean deleteOrder(Integer order_no);
-//        Order findOrderById(Integer id);
-//        Order findOrderByUid(Integer uid);
-//        List<Order> searchOrders(String keyword, int page, int size);
-//        int countOrdersByKeyword(String keyword);
+    Order findOrderByUid(Integer uid);
 
+    List<Order> searchOrders(String keyword, int page, int size);
 
+    int countOrdersByKeyword(String keyword);
 
-////        public interface OrderService {
-//              interface  Order findOrderByOrderNo(Integer order_no);
-//                Boolean checkOrderByOrderNo(Integer order_no);
-//                Boolean checkOrderByUid(Integer uid);
-//                Boolean checkOrderByAddrId(Integer addr_id);
-//                Boolean insertOrder(Order order);
-//                BigDecimal findOrderAmount(Integer order_no);
-//                Boolean checkOrderAmount(Integer order_no, BigDecimal amount);
-//                Boolean updateOrderType(Integer order_no, Integer type);
-//                Integer findOrderFeight(Integer order_no);
-//                Boolean updateOrderStatus(Integer order_no, Integer status);
-//                List<Order> findAllOrders(int page, int size);
-//                int countOrders();
-//                Boolean deleteOrder(Integer order_no);
-//                Order findOrderById(Integer id);
-//                Order findOrderByUid(Integer uid);
-//                List<Order> searchOrders(String keyword, int page, int size);
-//                int countOrdersByKeyword(String keyword);
-////        }
+    boolean updateOrderInfo(Order order);
 
+    public boolean updateByOrderNo(Order order);
 
 }

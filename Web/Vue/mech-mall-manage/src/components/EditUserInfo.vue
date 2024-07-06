@@ -9,22 +9,7 @@ const editRef = ref(null);
 const ageOptions = Array.from({ length: 121 }, (_, i) => i); // 生成0到120的数组
 
 
-const form = reactive({
-  id: '',
-  account: '',
-  password: '',
-  email: '',
-  phone: '',
-  question: '',
-  asw: '',
-  role: '',
-  age: '',
-  sex: '',
-  create_time: '',
-  update_time: '',
-  del: '',
-  name: ''
-});
+const form = reactive({});
 
 const resetForm = () => {
   form.id = '';
@@ -37,8 +22,8 @@ const resetForm = () => {
   form.role = '';
   form.age = '';
   form.sex = '';
-  form.create_time = '';
-  form.update_time = '';
+  form.createTime = '';
+  form.updateTime = '';
   form.del = '';
   form.name = '';
 };
@@ -58,14 +43,20 @@ const dialogWidth = '500px';
 const onSubmit = () => {
   editRef.value.validate(async (valid) => {
     if (valid) {
+      let res
       try {
-        const res = await apiRequests.updateUserInfo(form)
+        if (store.getters.role === 2) {
+          res = await apiRequests.updateUserInfo(form)
+        }
+        else {
+          res = await apiRequests.editUserInfo(form)
+        }
         if (res.success) {
           const updatedUserInfo = res.data
           // 调用 store 的 action 保存数据
           store.dispatch('updateSelectedUserInfo', updatedUserInfo);
           // 通知管理用户界面刷新
-          store.commit('setIsAdminUserFresh', !store.getters.isAdisAdminUserFresh)
+          store.commit('setIsAdminUserFresh', !store.getters.isAdminUserFresh)
           ElMessage.success(res.message)
           resetForm()
           store.commit('setEditUserInfoDiaVisible', false);

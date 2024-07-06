@@ -1,38 +1,51 @@
-<!-- 导航栏部分 -->
+<script setup>
+import { useRouter } from 'vue-router';
+import { useStore } from 'vuex';
+import { SystemConsts } from '@/enums/SystemConsts';
+import { computed } from 'vue'
+const projectName = SystemConsts.PROJECT_NAME
+const router = useRouter();
+const store = useStore()
+const logout = () => {
+  localStorage.removeItem('token');
+  localStorage.removeItem('my-app-state');
+  store.commit('setIsLogin', false)
+  router.replace({ path: '/' });
+}
+const editAdminInfo = () => {
+  const adminInfo = store.getters.curUserInfo
+  // 将要编辑的用户信息存入 store 里
+  store.dispatch('updateSelectedUserInfo', adminInfo)
+  // 显示编辑用户对话框
+  store.commit('setEditUserInfoDiaVisible', true)
+}
+
+const username = computed(() => store.getters.account)
+</script>
 <template>
   <div class="admin-header">
-    <h1 class="loge">机械<span>平台</span></h1>
+    <h3 class="loge">{{ projectName }}</h3>
     <el-dropdown>
       <div class="admin-button">
-        你好！管理员<el-icon class="el-icon--right"><arrow-down /></el-icon>
+        你好！{{ username }}<el-icon class="el-icon--right"></el-icon>
       </div>
       <template #dropdown>
         <el-dropdown-menu>
-          <el-dropdown-item class="custom-item">编辑资料</el-dropdown-item>
-          <el-dropdown-item class="custom-item" @click="goToLoginPage">退出登录</el-dropdown-item>
+          <el-dropdown-item class="custom-item" @click="editAdminInfo"
+            >编辑资料</el-dropdown-item
+          >
+          <el-dropdown-item class="custom-item" @click="logout"
+            >退出登录</el-dropdown-item
+          >
         </el-dropdown-menu>
       </template>
     </el-dropdown>
   </div>
 </template>
 
-<script setup>
-import { useRouter } from 'vue-router';
-
-const router = useRouter();
-const goToLoginPage = () => {
-  // // 设置被激活的页面index = 1
-  // store.commit('setActivePageIndex', 1)
-  localStorage.removeItem('token')
-  router.replace({ path: '/' })
-}
-// onMounted(() => {
-//   router.push({ name: 'login' })
-// })
-</script>
 
 <style scoped>
- /* 管理后台导航内容 */
+/* 管理后台导航内容 */
 .admin-header {
   display: flex;
   justify-content: flex-end; /* 将内容右对齐 */
@@ -42,9 +55,9 @@ const goToLoginPage = () => {
   margin-left: 5px;
   margin-right: 5px;
 
-  padding: 50px 80px;
+  padding: 5px 80px;
   width: 1370px;
-  height: 1px;
+  height: 60px;
   border-radius: 10px;
   box-shadow: 0 0 10px #000000a7;
 }

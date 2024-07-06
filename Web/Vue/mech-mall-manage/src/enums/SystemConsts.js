@@ -1,5 +1,5 @@
 export const SystemConsts = {
-	BASE_URL: "http://localhost:8080/actionmall",
+	BASE_URL: "http://localhost:8080",
 	PROJECT_NAME: "匠心机界",
 	// 表格标题样式
 	headerCellStyle: {

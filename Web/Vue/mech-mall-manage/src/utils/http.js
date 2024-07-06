@@ -7,11 +7,9 @@ const httpInstance = axios.create({
 	baseURL: SystemConsts.BASE_URL,
 	timeout: 5000,
 	withCredentials: true,
-	headers: {
-		'Content-Type': 'application/json'  // 修改为JSON格式
-	}
 });
-
+// Content-Type 响应头
+axios.defaults.headers.post['Content-Type'] = 'application/x-www-form-urlencoded;charset=UTF-8'
 // axios 请求拦截器
 httpInstance.interceptors.request.use(config => {
 	// 在每次请求前检查并添加JWT令牌

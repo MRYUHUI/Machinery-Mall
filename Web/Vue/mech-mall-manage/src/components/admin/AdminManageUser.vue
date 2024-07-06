@@ -51,7 +51,7 @@ const searchUsers = async (query, page = 1, size = 10) => {
     return;
   }
   const res = await apiRequests.searchUsers(query, page, size);
-  console.log(res);
+
 
   userList.value = res.data;
   totalUsers.value = res.total;
@@ -152,10 +152,7 @@ onMounted(() => {
         width="80"
         align="center"
       ></el-table-column>
-      <el-table-column prop="id" 
-        width="80px" 
-        label="编号" 
-        align="center" />
+      <el-table-column prop="id" width="80px" label="编号" align="center" />
       <el-table-column
         prop="account"
         :width="columnWidth"

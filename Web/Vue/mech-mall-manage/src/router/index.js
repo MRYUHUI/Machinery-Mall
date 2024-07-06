@@ -1,5 +1,155 @@
 import { createRouter, createWebHashHistory } from 'vue-router'
 const routes = [
+
+	{
+		path: '/',
+		name: 'layout',
+		component: () => import('@/views/Layout.vue'),
+		redirect: { name: 'user-home' },
+		children: [
+			{
+				// 前台界面
+				path: '/',
+				name: 'user-home',
+				component: () => import('@/views/UserHome.vue'),
+				redirect: { name: 'font-page' },
+				meta: {
+					breadcrumb: '首页'
+				},
+				children: [
+					{
+						// 搜索商品详情
+						path: '/search-detail',
+						name: 'search-detail',
+						component: () => import('@/views/Home/DisplaySearchGoods.vue'),
+						meta: {
+							breadcrumb: '搜索商品'
+						},
+					},
+					{
+						// 前台的首页
+						path: '/',
+						name: 'font-page',
+						component: () => import('@/views/FrontPage.vue')
+					},
+					{
+						// 热门商品详情
+						path: '/hot-detail',
+						name: 'hot-detail',
+						component: () => import('@/views/Home/DisplayHotGoods.vue'),
+						meta: {
+							breadcrumb: '热销商品'
+						},
+					},
+					{
+						// 商品详情
+						path: '/good/detail',
+						name: 'good-detail',
+						component: () => import('@/views/Commodity/GoodDetail.vue'),
+						meta: {
+							breadcrumb: '商品详情'
+						},
+					},
+					{
+						// 分类商品详情
+						path: '/category/good/detail',
+						name: 'category-good-detail',
+						component: () => import('@/views/Commodity/GoodOrderByCategory.vue'),
+						meta: {
+							breadcrumb: '分类详情'
+						},
+					},
+					{
+						// 我的商城
+						path: '/mall-home',
+						name: 'mall-home',
+						component: () => import('@/views/MyMallHome.vue'),
+						redirect: { name: 'order-user' },  // 添加默认重定向
+						children: [
+							{
+								// 我的订单
+								path: '/order-user',
+								name: 'order-user',
+								component: () => import('@/components/user/UserOrder.vue')
+							},
+							{
+								// 我的购物车
+								path: '/cart-user',
+								name: 'cart-user',
+								component: () => import('@/components/user/UserCart.vue')
+							},
+							{
+								// 收货地址管理
+								path: '/address-user',
+								name: 'address-user',
+								component: () => import('@/components/user/UserAddress.vue')
+							},
+						]
+					},
+				]
+			},
+		]
+	},
+	{
+		// 登录
+		path: '/login',
+		name: 'login',
+		component: () => import('@/views/Login.vue'),
+	},
+	{
+		// 注册
+		path: '/sign-up',
+		name: 'register',
+		component: () => import('@/views/Register.vue')
+	},
+	{
+		// 后台
+		path: '/admin-home',
+		name: 'admin-home',
+		component: () => import('@/views/AdminHome.vue'),
+		meta: {
+			requireAuth: true,
+		},
+		redirect: { name: 'admin-user' },  // 添加默认重定向
+		children: [
+			{
+				// 用户管理
+				path: '',
+				name: 'admin-user',
+				component: () => import('@/components/admin/AdminManageUser.vue'),
+				meta: {
+					requireAuth: true,
+				},
+			},
+			{
+				// 商品类型管理
+				path: '/admin-good-type',
+				name: 'admin-good-type',
+				component: () => import('@/components/admin/AdminManageGoodType.vue'),
+				meta: {
+					requireAuth: true,
+				},
+			},
+			{
+				// 商品管理
+				path: '/admin-goods',
+				name: 'admin-goods',
+				component: () => import('@/components/admin/AdminManageGoods.vue'),
+				meta: {
+					requireAuth: true,
+				},
+			},
+			{
+				// 订单管理
+				path: '/admin-order',
+				name: 'admin-order',
+				component: () => import('@/components/admin/AdminMangeOrder.vue'),
+				meta: {
+					requireAuth: true,
+				},
+			},
+		]
+	},
 	{
 		path: '/:pathMatch(.*)*',
 		name: 'CatchAll',
@@ -30,75 +180,6 @@ const routes = [
 		name: 'ServerError',
 		component: () => import('@/views/error/ERROR_500.vue'), // 服务器错误
 	},
-	{
-		path: '/',
-		name: 'layout',
-		component: () => import('@/views/Layout.vue'),
-		redirect: { name: 'user-home' },  // 添加默认重定向
-		children: [
-			{
-				path: '/login',
-				name: 'login',
-				component: () => import('@/views/Login.vue'),
-			},
-			{
-				path: '/sign-up',
-				name: 'register',
-				component: () => import('@/views/Register.vue')
-			}
-		]
-	},
-	{
-		path: '/user-home',
-		name: 'user-home',
-		component: () => import('@/views/UserHome.vue'),
-		meta: {
-			requireAuth: true,
-		},
-	},
-	{
-		path: '/admin-home',
-		name: 'admin-home',
-		component: () => import('@/views/AdminHome.vue'),
-		meta: {
-			requireAuth: true,
-		},
-		redirect: { name: 'admin-user' },  // 添加默认重定向
-		children: [
-			{
-				path: '',
-				name: 'admin-user',
-				component: () => import('@/components/admin/AdminManageUser.vue'),
-				meta: {
-					requireAuth: true,
-				},
-			},
-			{
-				path: '/admin-good-type',
-				name: 'admin-good-type',
-				component: () => import('@/components/admin/AdminManageGoodType.vue'),
-				meta: {
-					requireAuth: true,
-				},
-			},
-			{
-				path: '/admin-goods',
-				name: 'admin-goods',
-				component: () => import('@/components/admin/AdminManageGoods.vue'),
-				meta: {
-					requireAuth: true,
-				},
-			},
-			{
-				path: '/admin-order',
-				name: 'admin-order',
-				component: () => import('@/components/admin/AdminMangeOrder.vue'),
-				meta: {
-					requireAuth: true,
-				},
-			},
-		]
-	}
 ]
 
 const router = createRouter({
@@ -112,7 +193,7 @@ router.beforeEach((to, from, next) => {
 	const token = localStorage.getItem('token')
 
 	// 检查是否是相同的路由
-	if (to.path === from.path) {
+	if (to.name === from.name) {
 		// 如果是相同路由，则不进行导航
 		console.log('当前路由与目标路由相同，不进行导航。');
 		next(false); // 阻止导航

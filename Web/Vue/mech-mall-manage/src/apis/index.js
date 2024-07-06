@@ -4,6 +4,10 @@ import adminUserApi from '@/apis/admin-user'
 import adminOrderApi from './admin-order'
 import adminGoodsApi from './admin-goods'
 import adminGoodTypeApi from './admin-good-type'
+import commodityApi from './commodity'
+import userCartApi from './user-cart'
+import userOrderItemApi from './user-orderitem'
+import userAddressApi from './user-address'
 
 const apiRequests = {
 	// 获取图片url
@@ -13,6 +17,11 @@ const apiRequests = {
 	...adminGoodsApi,
 	...adminOrderApi,
 	...adminGoodTypeApi,
+	...commodityApi,
+	...userCartApi,
+	...userOrderItemApi,
+	...userAddressApi,
+
 }
 
 export default apiRequests;
