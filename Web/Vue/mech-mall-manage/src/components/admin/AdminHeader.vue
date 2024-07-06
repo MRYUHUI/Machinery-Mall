@@ -2,6 +2,7 @@
 import { useRouter } from 'vue-router';
 import { useStore } from 'vuex';
 import { SystemConsts } from '@/enums/SystemConsts';
+import { computed } from 'vue'
 const projectName = SystemConsts.PROJECT_NAME
 const router = useRouter();
 const store = useStore()
@@ -18,13 +19,15 @@ const editAdminInfo = () => {
   // 显示编辑用户对话框
   store.commit('setEditUserInfoDiaVisible', true)
 }
+
+const username = computed(() => store.getters.account)
 </script>
 <template>
   <div class="admin-header">
-    <h1 class="loge">{{ projectName }}</h1>
+    <h3 class="loge">{{ projectName }}</h3>
     <el-dropdown>
       <div class="admin-button">
-        你好！管理员<el-icon class="el-icon--right"></el-icon>
+        你好！{{ username }}<el-icon class="el-icon--right"></el-icon>
       </div>
       <template #dropdown>
         <el-dropdown-menu>
@@ -52,9 +55,9 @@ const editAdminInfo = () => {
   margin-left: 5px;
   margin-right: 5px;
 
-  padding: 50px 80px;
+  padding: 5px 80px;
   width: 1370px;
-  height: 1px;
+  height: 60px;
   border-radius: 10px;
   box-shadow: 0 0 10px #000000a7;
 }

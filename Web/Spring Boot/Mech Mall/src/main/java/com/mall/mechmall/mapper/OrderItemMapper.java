@@ -43,4 +43,9 @@ public interface OrderItemMapper {
     })
     public int updateOrderItem(OrderItem orderItem);
 
+    @Select("SELECT * FROM order_items  LIMIT #{offset}, #{size}")
+    public List<OrderItem> getAllOrderItem(@Param("offset") int offset, @Param("size") int size);
+
+    @Select("SELECT COUNT(*) FROM order_items")
+    public int countOrderItem();
 }

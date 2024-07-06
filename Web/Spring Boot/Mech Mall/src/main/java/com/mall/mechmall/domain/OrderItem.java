@@ -41,7 +41,7 @@ public class OrderItem {
     private Integer quantity;
 
     @TableField(value = "total_price")
-    private double totalPrice;
+    private float totalPrice;
 
     @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss")
     @TableField(value = "created")

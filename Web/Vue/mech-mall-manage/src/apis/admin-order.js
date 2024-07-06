@@ -14,6 +14,26 @@ const adminOrderApi = {
 			page: page,
 			size: size
 		}
-	})
+	}),
+	getnewAllOrderItem: (page, size) => httpInstance.get('/admin/order/allOrderItem', {
+		params: {
+			page: page,
+			size: size
+		}
+	}),
+
+	getOrderById: (id) => httpInstance.get('/admin/order/getOrderById', {
+		params: {
+			id: id,
+		}
+	}),
+
+	getOrderItemByOrderId: (id) => httpInstance.get('/admin/order/getOrderItemById', {
+		params: {
+			id: id,
+		}
+	}),
 };
+
+
 export default adminOrderApi;

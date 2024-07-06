@@ -20,4 +20,8 @@ public interface OrderItemService {
     Boolean delOrderItem(int id);
 
     Boolean updateOrderItem(OrderItem orderItem);
+
+    List<OrderItem> getAllOrderItem(int offset, int size);
+
+    int countOrderItem();
 }

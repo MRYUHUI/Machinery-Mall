@@ -6,52 +6,40 @@ import { useStore } from "vuex";
 import { ElMessage } from "element-plus";
 import { ElConfigProvider } from 'element-plus'
 import zhCn from 'element-plus/lib/locale/lang/zh-cn'
+import DetailManagerOrder from "./DetailManagerOrder.vue";
 // data
 const store = useStore()
-const userList = ref([])
-const totalUsers = ref(0)
-const columnWidth = '100px'
+const orderItemList = ref([])
+const totalOrderItem = ref(0)
+const columnWidth = '200px'
 const currentPage = ref(1)
 const pageSize = ref(10)
-// 要删除的用户id
-let curDelOrderNo = -1
-// 警告提示
-const deleteOrderDialogVisible = ref(false)
+
 const searchQuery = ref('')
 
+
 // method ===============
-// 获取所有用户
-const getAllOrders = async (page = 1, size = 10) => {
-  const res1 = await apiRequests.getAllOrders(page, size)
-  userList.value = res1.data
-  totalUsers.value = res1.total
+// 
+const getAllOrderItem = async (page = 1, size = 10) => {
+  const res1 = await apiRequests.getnewAllOrderItem(page, size)
+  orderItemList.value = res1.data
+  totalOrderItem.value = res1.total
 }
 // 搜索用户
-const searchOrders = async (query, page = 1, size = 10) => {
-  if (!query) {
-    getAllOrders(page, size) // 如果查询为空，调用获取所有用户的函数
+const searchOrderItem = async (searchQuery, page = 1, size = 10) => {
+  if (!searchQuery) {
+    getAllOrderItem(page, size) // 如果查询为空，调用获取所有用户的函数
     return;
   }
-  const res = await apiRequests.searchOrders(query, page, size);
-
-
-  userList.value = res.data;
-  totalUsers.value = res.total;
+  const res = await apiRequests.getOrderItemByOrderId(searchQuery);
+  orderItemList.value = res.data;
+  totalOrderItem.value = res.total;
 }
-
-// 根据
-const formatOrderNo = (res) => {
-  return res.orderNo ? res.orderNo : "-";
-};
-
-const formatAddrId = (row) => {
-  return row.addrId ? row.addrId.toString() : '-';
-};
 
 // 页码改变时的处理函数
 const handlePageChange = (page) => {
   currentPage.value = page
-  searchOrders(searchQuery.value, page, pageSize.value)
+  searchOrderItem(searchQuery.value, page, pageSize.value)
 }
 
 // 每页条数改变时的处理函数
@@ -60,53 +48,30 @@ const handleSizeChange = (size) => {
   searchUsers(searchQuery.value, currentPage.value, size)
 }
 
-
-
 // 编辑用户信息---------------
-const handleEdit = (user) => {
-  // 将要编辑的用户信息存入 store 里
-  store.dispatch('updateSelectedUserInfo', user)
+const showDetail = (row) => {
+  console.log('=====-=-=')
+  console.log(row);
+
+  store.commit('setSelectedUserOrderItemInfo', row)
+  console.log(store.getters.selectedUserOrderItemInfo);
+
   // 显示编辑用户对话框
-  store.commit('setEditUserInfoDiaVisible', true)
+  store.commit('setAdminDetailOrderItemDInfoiaVisible', true)
 }
 
 
 
-
-
-// 删除用户原版本
-const handleDelete = (order) => {
-  deleteOrderDialogVisible.value = true
-  curDelOrderNo = order.orderNo
-}
-// 删除用户动作
-const deleteOrderAction = async () => {
-  const res = await apiRequests.deleteOrder(curDelOrderNo)
-  if (res.success) {
-    deleteOrderDialogVisible.value = false
-    ElMessage.success(res.message)
-    // 刷新
-    searchOrders(searchQuery.value, currentPage.value, pageSize.value)
-  } else {
-    ElMessage.error(res.message)
-  }
-}
 const handleSearch = async () => {
-  searchOrders(searchQuery.value, currentPage.value, pageSize.value)
+  searchOrderItem(searchQuery.value, currentPage.value, pageSize.value)
 }
 // 复选框操作，可以大量删除用户
 const handleSelectionChange = () => {
 }
-// computed
-const isAdminUserFresh = computed(() => store.getters.isAdminUserFresh)
-watch(isAdminUserFresh, (newVal, oldVal) => {
-  if (newVal === oldVal)
-    return
-  searchOrders(searchQuery.value, currentPage.value, pageSize.value)
-})
+const adminDetailOrderItemDInfoiaVisible = computed(() => store.getters.adminDetailOrderItemDInfoiaVisible)
 // onMounted
 onMounted(() => {
-  searchOrders(searchQuery.value, currentPage.value, pageSize.value)
+  getAllOrderItem();
 })
 </script>
 
@@ -118,7 +83,7 @@ onMounted(() => {
     <div class="search-bar">
       <el-input
         v-model="searchQuery"
-        placeholder="请输入用户名或姓名"
+        placeholder="请输入"
         class="search-input"
         clearable
       />
@@ -127,7 +92,7 @@ onMounted(() => {
     <!-- 用户信息 -->
     <!-- 设置表长和宽 -->
     <el-table
-      :data="userList"
+      :data="orderItemList"
       style="width: 100%; height: 82%"
       class=""
       highlight-current-row
@@ -144,77 +109,35 @@ onMounted(() => {
 
       <el-table-column prop="id" width="80px" label="编号" :align="'center'" />
       <el-table-column
-        prop="order_no"
-        label="订单编号"
+        prop="orderId"
+        label="订单ID"
         :width="columnWidth"
         align="center"
-        :formatter="formatOrderNo"
       ></el-table-column>
-
-      <!-- kk -->
-      <!-- <el-table-column
-        prop="order_no"
-        width="columnWidth"
-        label="订单编号"
-        :align="'center'"
-      /> -->
-
       <el-table-column
         prop="uid"
         :width="columnWidth"
         label="用户编号"
         :align="'center'"
       />
-      <!-- kk -->
-      <!-- <el-table-column
-        prop="addr_id"
-        width="columnWidth"
-        label="收货地址编号"
-        :align="'center'"
-      /> -->
-      <!-- <el-table-column
-  prop="order_no"
-  label="订单编号"
-  :width="columnWidth"
-  align="center"
-  :formatter="formatOrderNo"
-></el-table-column> -->
-
       <el-table-column
-        prop="addrId"
-        label="地址编号"
+        prop="goodsName"
+        label="商品名字"
         :width="columnWidth"
         align="center"
-        :formatter="formatAddrId"
       ></el-table-column>
 
       <el-table-column
-        prop="amount"
+        prop="totalPrice"
         width="columnWidth"
         label="交易金额"
-        :align="'center'"
-      />
-      <el-table-column
-        prop="type"
-        width="columnWidth"
-        label="付款类型"
-        :align="'center'"
-      />
-
-      <el-table-column
-        prop="freight"
-        :width="columnWidth"
-        label="运费"
         :align="'center'"
       />
       <!-- kk -->
       <el-table-column label="操作" :width="200" align="center">
         <template #default="{ row }">
-          <el-button type="primary" size="mini" @click="handleEdit(row)"
+          <el-button type="primary" size="mini" @click="showDetail(row)"
             >详情</el-button
-          >
-          <el-button type="danger" size="mini" @click="handleDelete(row)"
-            >删除</el-button
           >
         </template>
       </el-table-column>
@@ -228,49 +151,13 @@ onMounted(() => {
         :page-size="pageSize"
         :page-sizes="[1, 3, 5, 8, 10, 12, 20]"
         layout="total, sizes, prev, pager, next, jumper"
-        :total="totalUsers"
+        :total="totalOrderItem"
     /></el-config-provider>
-
-    <!-- 删除用户警告 -->
-    <el-dialog
-      v-model="deleteOrderDialogVisible"
-      width="450px"
-      destroy-on-close
-      center
-      class="delete-user-dia"
-    >
-      <!-- 使用 title 插槽自定义标题样式   删除 -->
-      <template #title>
-        <div class="custom-dialog-title">警 告</div>
-      </template>
-
-      <span style="font-size: 20px">
-        <strong>你是否要删除该用户，确认后操作不可逆。</strong>
-      </span>
-      <template #footer>
-        <div class="dialog-footer">
-          <el-button @click="deleteOrderDialogVisible = false">取消</el-button>
-          <el-button type="primary" @click="deleteOrderAction">确定</el-button>
-        </div>
-      </template>
-    </el-dialog>
   </div>
+  <DetailManagerOrder
+    v-if="adminDetailOrderItemDInfoiaVisible"
+  ></DetailManagerOrder>
 </template>
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 
 <style>

@@ -11,14 +11,14 @@ import lombok.NoArgsConstructor;
 import java.math.BigDecimal;
 import java.util.Date;
 import com.baomidou.mybatisplus.annotation.TableField;
-        import com.baomidou.mybatisplus.annotation.TableId;
-        import com.baomidou.mybatisplus.annotation.TableName;
-        import com.fasterxml.jackson.annotation.JsonFormat;
-        import lombok.AllArgsConstructor;
-        import lombok.Data;
-        import lombok.NoArgsConstructor;
+import com.baomidou.mybatisplus.annotation.TableId;
+import com.baomidou.mybatisplus.annotation.TableName;
+import com.fasterxml.jackson.annotation.JsonFormat;
+import lombok.AllArgsConstructor;
+import lombok.Data;
+import lombok.NoArgsConstructor;
 
-        import java.util.Date;
+import java.util.Date;
 import java.util.concurrent.atomic.LongAdder;
 
 /**
@@ -42,7 +42,7 @@ public class Order {
     private Integer uid; // int对应Integer
 
     @TableField(value = "addr_id")
-    private Integer addrId; // int对应Integer
+    private double addrId; // int对应Integer
 
     @TableField(value = "amount")
     private double amount; // decimal对应BigDecimal
