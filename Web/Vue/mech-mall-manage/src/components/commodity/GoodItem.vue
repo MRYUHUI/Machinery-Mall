@@ -22,8 +22,8 @@ const goToDetail = () => {
 
 <template>
   <el-card class="product-card setPoint" @click="goToDetail">
-    <el-image
-      :src="apiRequests.attachImageUrl(product.iconUrl)"
+    <img
+      v-img-lazy="apiRequests.attachImageUrl(product.iconUrl)"
       class="product-image"
     />
     <div class="product-info">
