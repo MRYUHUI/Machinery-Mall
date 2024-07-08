@@ -171,7 +171,7 @@ const handleSearch = () => {
 }
 
 .search-input {
-  max-width: 600px;
+  width: 600px;
   margin-right: auto;
 }
 </style>

@@ -8,12 +8,12 @@ export const lazyPlugin = {
 			mounted (el, binding) {
 				// el: 指令绑定的元素
 				// binding: 指令等于号后面绑定的表达式的值  图片url
-				console.log(el, binding.value);
+				// console.log(el, binding.value);
 				useIntersectionObserver(
 					el, // 要监听谁,就传谁
 					// isIntersecting是bool值,监听的el是否进入视图区域
 					([{ isIntersecting }]) => {
-						console.log(isIntersecting);
+						// console.log(isIntersecting);
 						if (isIntersecting) {
 							// 进入视图区域
 							el.src = binding.value

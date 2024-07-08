@@ -105,6 +105,9 @@ public interface OrderMapper{
     })
     public int updateByOrderNo(Order order);
 
+    @Select("SELECT COUNT(*) FROM orders WHERE uid = #{uid}")
+    int countOrderByUserId(@Param("uid") int userId);
 
-
+    @Select("SELECT COUNT(*) FROM orders WHERE uid = #{uid}")
+    public int countOrderByUserId(@Param("uid") Integer userId);
 }

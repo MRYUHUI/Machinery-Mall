@@ -1,6 +1,7 @@
 package com.mall.mechmall.service;
 
 import com.mall.mechmall.domain.OrderItem;
+import org.apache.ibatis.annotations.Param;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -24,4 +25,6 @@ public interface OrderItemService {
     List<OrderItem> getAllOrderItem(int offset, int size);
 
     int countOrderItem();
+
+    boolean countOrderItemByUserId(int userId);
 }

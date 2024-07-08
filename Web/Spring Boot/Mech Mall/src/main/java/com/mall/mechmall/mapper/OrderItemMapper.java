@@ -48,4 +48,7 @@ public interface OrderItemMapper {
 
     @Select("SELECT COUNT(*) FROM order_items")
     public int countOrderItem();
+
+    @Select("SELECT COUNT(*) FROM order_items WHERE uid = #{uid}")
+    int countOrderItemByUserId(@Param("uid") int userId);
 }

@@ -57,4 +57,6 @@ public interface OrderService {
 
     public boolean updateByOrderNo(Order order);
 
+    boolean countOrderByUserId(int userId);
+
 }

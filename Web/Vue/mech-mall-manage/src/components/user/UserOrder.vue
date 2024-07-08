@@ -48,8 +48,7 @@
               )
             "
             >支付</el-button
-          >
-          <el-button size="mini" @click="cancelOrder(orderItem)"
+          ><el-button size="mini" @click="cancelOrder(orderItem)"
             >取消订单</el-button
           >
         </div>
@@ -141,6 +140,7 @@ const showOrderDetails = (order) => {
   const selectedOrder = orderList.value.find(o => o.id === order.orderId);
   store.commit('setSelectedUserOrderInfo', selectedOrder);
   const selectedAddress = addressList.value.find(o => o.id === selectedOrder.addrId);
+
   store.commit('setSelectedUserAddressInfo', selectedAddress)
 
   // 设置对话框可见
