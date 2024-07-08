@@ -54,4 +54,9 @@ public class OrderItemServiceImpl implements OrderItemService {
         return orderItemMapper.countOrderItem();
     }
 
+    @Override
+    public boolean countOrderItemByUserId(int userId) {
+        return orderItemMapper.countOrderItemByUserId(userId) > 0;
+    }
+
 }

@@ -130,5 +130,10 @@ public class OrderServiceImpl implements OrderService {
     public boolean updateByOrderNo(Order order) {
         return orderMapper.updateByOrderNo(order) > 0;
     }
+
+    @Override
+    public boolean countOrderByUserId(int userId) {
+        return orderMapper.countOrderByUserId(userId) > 0;
+    }
 }
 

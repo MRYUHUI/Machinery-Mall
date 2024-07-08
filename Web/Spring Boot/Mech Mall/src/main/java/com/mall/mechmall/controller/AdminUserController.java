@@ -2,6 +2,8 @@ package com.mall.mechmall.controller;
 
 import com.alibaba.fastjson.JSONObject;
 import com.mall.mechmall.domain.User;
+import com.mall.mechmall.service.OrderItemService;
+import com.mall.mechmall.service.OrderService;
 import com.mall.mechmall.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
@@ -21,6 +23,12 @@ public class AdminUserController {
 
     @Autowired
     private UserService userService;
+
+    @Autowired
+    private OrderService orderService;
+
+    @Autowired
+    private OrderItemService orderItemService;
 
     /**
      * 管理员跟新用户信息
@@ -42,6 +50,11 @@ public class AdminUserController {
     }
     @GetMapping("/deleteUser")
     public Object deleteUser(@RequestParam int id) {
+        boolean userHaveItem = orderItemService.countOrderItemByUserId(id);
+        boolean userhaveOrder = orderService.countOrderByUserId(id);
+        if (userHaveItem || userhaveOrder) {
+            return getJson("用户删除失败, 存在订单", false);
+        }
         boolean deleted = userService.deleteUser(id);
         if (deleted) {
             return getJson("用户删除成功", true);
